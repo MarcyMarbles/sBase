@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>User Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body th:replace="~{layout :: bodyContent}">
+<div th:fragment="content" class="content-wrapper">
+    <div th:if="${#lists.isEmpty(userTasks)}" class="no-tasks-guide">
+        <h2>Welcome to Your Dashboard</h2>
+        <p>You don't have any tasks yet.</p>
+        <p>Let's get you started by creating your first task!</p>
+        <a class="btn btn-primary" th:href="@{/tasks/new}">Create First Task</a>
+    </div>
+
+    <div th:if="${!#lists.isEmpty(userTasks)}">
+        <h2 class="mb-4">Welcome to Your Dashboard</h2>
+
+        <div class="form-container mb-4">
+            <h2>Task Summary</h2>
+            <canvas id="taskStatusChart"></canvas>
+        </div>
+
+        <div class="form-container">
+            <h2>Your Tasks</h2>
+            <div class="datagrid">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Task ID</th>
+                        <th>Task Name</th>
+                        <th>Description</th>
+                        <th>Priority</th>
+                        <th>Due Date</th>
+                        <th>Created At</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="task : ${userTasks}">
+                        <td th:text="${task.id}"></td>
+                        <td th:text="${task.label}"></td>
+                        <td th:text="${task.description}"></td>
+                        <td th:text="${task.priority}"></td>
+                        <td th:text="${task.formattedDueDate}"></td>
+                        <td th:text="${task.formattedCreatedAt}"></td>
+                        <td th:text="${task.category.name}"></td>
+                        <td th:text="${task.isExpired() ? 'Expired' : 'In progress'}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    document.addEventListener('DOMContentLoaded', function () {
+        const tasks = /*[[${userTasks}]]*/ [];
+
+        let expired = 0;
+        let inProgress = 0;
+
+        tasks.forEach(task => {
+            if (task.expired) {
+                expired++;
+            } else {
+                inProgress++;
+            }
+        });
+
+        const ctx = document.getElementById('taskStatusChart');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['In Progress', 'Expired'],
+                datasets: [{
+                    label: 'Task Status',
+                    data: [inProgress, expired],
+                    backgroundColor: ['#4CAF50', '#f44336'],
+                    borderColor: '#333',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#e0e0e0'
+                        }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Task Completion Status',
+                        color: '#e0e0e0'
+                    }
+                }
+            }
+        });
+    });
+    /*]]>*/
+</script>
+</body>
+</html>

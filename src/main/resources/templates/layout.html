@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="~{::title}">Application Layout</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body th:fragment="bodyContent">
+    <aside>
+        <div th:replace="~{fragments/sidebarMenu :: sidebarMenu(menu=${menu})}"></div>
+    </aside>
+    <div class="content-wrapper">
+        <main>
+            <div th:replace="~{::content}"></div>
+        </main>
+    </div>
+<script th:src="@{/js/sidebarMenu.js}"></script>
+<script th:src="@{/js/modal.js}"></script>
+</body>
+</html>

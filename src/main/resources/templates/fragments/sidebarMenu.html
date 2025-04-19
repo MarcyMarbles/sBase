@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Боковое меню</title>
+    <link rel="stylesheet" href="../../static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+<div class="sidebar" th:fragment="sidebarMenu">
+    <ul class="page-sidebar-menu" th:if="${menu != null}">
+        <h2><a th:text="${usr.username}" href="/profile"></a></h2>
+        <th:block th:insert="~{this :: renderMenu(menuItems=${menu})}"/>
+    </ul>
+</div>
+
+<!-- Recursive Fragment -->
+<th:block th:fragment="renderMenu(menuItems)">
+    <th:block th:each="menuItem : ${menuItems}">
+        <li th:classappend="!#lists.isEmpty(menuItem.subMenu) ? 'has-sub'">
+            <a th:href="${menuItem.url} ?: '#'">
+                <i th:class="${menuItem.icon}"></i>
+                <span th:text="${menuItem.title}"></span>
+            </a>
+            <ul class="sub-menu" th:if="!#lists.isEmpty(menuItem.subMenu)">
+                <th:block th:insert="~{this :: renderMenu(menuItems=${menuItem.subMenu})}"/>
+            </ul>
+        </li>
+    </th:block>
+</th:block>
+</body>
+</html>

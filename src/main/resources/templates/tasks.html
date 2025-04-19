@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Tasks</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body th:replace="~{layout :: bodyContent}">
+<div th:fragment="content">
+    <div class="datagrid">
+        <h3>Your Tasks</h3>
+        <button th:if="${isAssigner}" onclick="openModal('createTaskModal')">Create Task</button>
+        <table>
+            <thead>
+            <tr>
+                <th>Task Name</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Assigner</th>
+                <th>Assigned User</th>
+                <th>Due Date</th>
+                <th>Created At</th>
+                <th>Category</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="task : ${userTasks}">
+                <td th:text="${task.label}"></td>
+                <td th:text="${task.description}"></td>
+                <td th:text="${task.priority}"></td>
+                <td th:text="${task.assigner.username}"></td>
+                <td th:text="${task.assignedUser.username}"></td>
+                <td th:text="${task.formattedDueDate}" th:value="${task.due_date}"></td>
+                <td th:text="${task.formattedCreatedAt}" th:value="${task.created_at}"></td>
+                <td th:text="${task.category.name}"></td>
+                <td>
+                    <button th:if="${task.isExpired()}"
+                            class="expired-button"
+                            disabled>
+                        Expired
+                    </button>
+                    <form th:if="${!task.isExpired()}"
+                          th:action="@{/tasks/returnToAssigner/{id}(id=${task.id})}"
+                          method="post"
+                          style="display:inline;">
+                        <button type="submit"
+                                class="green-button">
+                            In Progress
+                        </button>
+                    </form>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+        <div class="pagination" th:if="${userTasks.totalElements > 0}">
+            <ul>
+                <li th:classappend="${userTasks.hasPrevious()} ? '' : 'disabled'">
+                    <a th:href="@{/tasks(page=${userTasks.number})}">&laquo;</a>
+                </li>
+                <li th:each="pageNum : ${#numbers.sequence(1, userTasks.totalPages)}"
+                    th:classappend="${pageNum == userTasks.number + 1} ? 'active'">
+                    <a th:href="@{/tasks(page=${pageNum})}" th:text="${pageNum}">1</a>
+                </li>
+                <li th:classappend="${userTasks.hasNext()} ? '' : 'disabled'">
+                    <a th:href="@{/tasks(page=${userTasks.number + 2})}">&raquo;</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div id="createTaskModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('createTaskModal')">&times;</span>
+            <h2>Create a New Task</h2>
+            <form th:action="@{/tasks/create}" method="post">
+                <div class="form-group">
+                    <label for="assignedUser">Assign Task To:</label>
+                    <select id="assignedUser" name="user" required>
+                        <option value=""></option>
+                        <option th:each="user : ${usersThatAssignedToTheAssigner}"
+                                th:value="${user.id}"
+                                th:text="${user.username}">
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="label">Task Name:</label>
+                    <input type="text" id="label" name="label" placeholder="Task Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <input type="text" id="description" name="description" placeholder="Description" required>
+                </div>
+                <div class="form-group">
+                    <label for="priority">Priority:</label>
+                    <select id="priority" name="priority" required>
+                        <option value=""></option>
+                        <option th:each="priority : ${priorities}"
+                                th:value="${priority}"
+                                th:text="${priority}"/>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Due Date:</label>
+                    <input type="date" id="dueDate" name="dueDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Category:</label>
+                    <select id="category" name="category">
+                        <option value="">Select Category</option>
+                        <option th:each="category : ${categories}"
+                                th:value="${category.id}"
+                                th:text="${category.name}">
+                        </option>
+                    </select>
+                </div>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script th:src="@{/js/modal.js}"></script>
+</body>
+</html>

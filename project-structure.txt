@@ -1,0 +1,187 @@
+Folder PATH listing
+Volume serial number is 586A-B72D
+C:.
+|   .gitattributes
+|   .gitignore
+|   build.gradle
+|   gradlew
+|   gradlew.bat
+|   project-structure.txt
+|   settings.gradle
+|   tree-view.bat.bat
+|   
++---.gradle
+|   +---8.12.1
+|   |   |   gc.properties
+|   |   |   
+|   |   +---checksums
+|   |   |       checksums.lock
+|   |   |       md5-checksums.bin
+|   |   |       sha1-checksums.bin
+|   |   |       
+|   |   +---executionHistory
+|   |   |       executionHistory.lock
+|   |   |       
+|   |   +---expanded
+|   |   +---fileChanges
+|   |   |       last-build.bin
+|   |   |       
+|   |   +---fileHashes
+|   |   |       fileHashes.lock
+|   |   |       
+|   |   \---vcsMetadata
+|   +---buildOutputCleanup
+|   |       buildOutputCleanup.lock
+|   |       cache.properties
+|   |       
+|   +---kotlin
+|   |   \---errors
+|   \---vcs-1
+|           gc.properties
+|           
++---.idea
+|       .gitignore
+|       compiler.xml
+|       gradle.xml
+|       kotlinc.xml
+|       misc.xml
+|       vcs.xml
+|       workspace.xml
+|       
++---gradle
+|   \---wrapper
+|           gradle-wrapper.jar
+|           gradle-wrapper.properties
+|           
+\---src
+    +---main
+    |   +---java
+    |   |   \---com
+    |   |       \---example
+    |   |           \---todolist
+    |   |               |   ToDoListApplication.java
+    |   |               |   
+    |   |               +---Configs
+    |   |               |       GlobalConfig.java
+    |   |               |       
+    |   |               +---Controller
+    |   |               |   +---GraphQL
+    |   |               |   |       PersonControllerQL.java
+    |   |               |   |       UserControllerQL.java
+    |   |               |   |       
+    |   |               |   +---MVC
+    |   |               |   |       HomeMVCController.java
+    |   |               |   |       LoginMVCController.java
+    |   |               |   |       MenuController.java
+    |   |               |   |       ProfileController.java
+    |   |               |   |       RegisterMVCController.java
+    |   |               |   |       TasksController.java
+    |   |               |   |       UiAdvice.java
+    |   |               |   |       
+    |   |               |   \---Rest
+    |   |               |           AuthController.java
+    |   |               |           PersonController.java
+    |   |               |           TaskController.java
+    |   |               |           
+    |   |               +---Entity
+    |   |               |   |   Category.java
+    |   |               |   |   FileDescriptor.java
+    |   |               |   |   MappedLocalizedClass.java
+    |   |               |   |   MappedSuperClass.java
+    |   |               |   |   MenuElement.java
+    |   |               |   |   Person.java
+    |   |               |   |   Priority.java
+    |   |               |   |   Roles.java
+    |   |               |   |   Tasks.java
+    |   |               |   |   User.java
+    |   |               |   |   
+    |   |               |   \---NotPersistent
+    |   |               |           Langs.java
+    |   |               |           Menu.java
+    |   |               |           TaskStats.java
+    |   |               |           
+    |   |               +---POJOs
+    |   |               |       PersonPOJO.java
+    |   |               |       UserAuthPOJO.java
+    |   |               |       UserMVCRegisterPOJO.java
+    |   |               |       UserProfileForm.java
+    |   |               |       UserResponseEnt.java
+    |   |               |       
+    |   |               +---Repos
+    |   |               |       CategoryRepository.java
+    |   |               |       FileDescriptorRepository.java
+    |   |               |       MenuElementRepository.java
+    |   |               |       PersonRepository.java
+    |   |               |       PriorityRepository.java
+    |   |               |       RoleRepository.java
+    |   |               |       TasksRepository.java
+    |   |               |       UserRepository.java
+    |   |               |       
+    |   |               +---Security
+    |   |               |       JwtAuthenticationFilter.java
+    |   |               |       JwtService.java
+    |   |               |       JwtUtils.java
+    |   |               |       SecurityConfig.java
+    |   |               |       
+    |   |               +---Service
+    |   |               |       AuthService.java
+    |   |               |       CategoryService.java
+    |   |               |       FileDescriptorService.java
+    |   |               |       JwtAuthenticationSuccessHandler.java
+    |   |               |       MenuService.java
+    |   |               |       PersonService.java
+    |   |               |       PriorityService.java
+    |   |               |       RolesService.java
+    |   |               |       TaskService.java
+    |   |               |       UserDetailsImpl.java
+    |   |               |       UserDetailsServiceImpl.java
+    |   |               |       UserService.java
+    |   |               |       
+    |   |               \---XmlUtils
+    |   |                       RoleDeserializer.java
+    |   |                       
+    |   \---resources
+    |       |   application.properties
+    |       |   bootstrap.yml
+    |       |   
+    |       +---graphql
+    |       |       schema.graphqls
+    |       |       
+    |       +---static
+    |       |   +---css
+    |       |   |       styles.css
+    |       |   |       
+    |       |   +---images
+    |       |   |       default-profile.jpg
+    |       |   |       
+    |       |   \---js
+    |       |           modal.js
+    |       |           profileValidator.js
+    |       |           redirector.js
+    |       |           registration.js
+    |       |           sidebarMenu.js
+    |       |           
+    |       +---templates
+    |       |   |   DEFAULTTEMPLATEDONTUSE.html
+    |       |   |   error.html
+    |       |   |   home.html
+    |       |   |   layout.html
+    |       |   |   login.html
+    |       |   |   profile.html
+    |       |   |   register.html
+    |       |   |   tasks.html
+    |       |   |   users.html
+    |       |   |   
+    |       |   \---fragments
+    |       |           sidebarMenu.html
+    |       |           
+    |       \---xml
+    |               menu.xml
+    |               
+    \---test
+        \---java
+            \---com
+                \---example
+                    \---todolist
+                            ToDoListApplicationTests.java
+                            

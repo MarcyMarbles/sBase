@@ -1,0 +1,49 @@
+scalar DateTime
+
+type Query {
+    allUsers: [User]
+    userById(id: ID!): User
+
+    allPersons: [Person]
+    personById(id: ID!): Person
+}
+
+type User {
+    id: ID!
+    login: String!
+    password: String!
+    username: String!
+    created_ts: DateTime
+    updated_ts: DateTime
+    deleted_ts: DateTime
+    start_date_ts: DateTime
+    end_date_ts: DateTime
+    person: [Person]!
+    currentPerson: Person!
+}
+
+type Person {
+    id: ID!
+    firstName: String
+    lastName: String
+    middleName: String
+    email: String
+    created_ts: DateTime
+    updated_ts: DateTime
+    deleted_ts: DateTime
+    start_date_ts: DateTime
+    end_date_ts: DateTime
+    tasks: [Task]
+    users: [User]
+}
+
+type Task {
+    id: ID!
+    name: String
+    description: String
+    created_ts: DateTime
+    updated_ts: DateTime
+    deleted_ts: DateTime
+    start_date_ts: DateTime
+    end_date_ts: DateTime
+}

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>User Profile</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.9/jquery.inputmask.min.js"></script>
+    <script th:src="@{/js/profileValidator.js}"></script>
+</head>
+<body th:replace="~{layout :: bodyContent}">
+<div th:fragment="content">
+    <div class="form-container">
+        <h2>User Profile</h2>
+        <div class="profile-picture-container">
+            <label class="profile-picture-label" for="profilePictureFile">
+                <img class="profile-picture"
+                     th:src="${user.currentPerson?.profilePicture != null} ? @{/profilePicture/{id}(id=${user.id})} : '/images/default-profile.png'"
+                     alt="Profile Picture"/>
+                <span class="upload-icon"></span>
+            </label>
+            <input type="file" id="profilePictureFile" name="profilePictureFile" accept="image/*"
+                   style="display: none;"/>
+            <div th:if="${profilePictureError}" th:text="${profilePictureError}" class="error-message"></div>
+        </div>
+        <form th:action="@{/updateProfile}" method="post" enctype="multipart/form-data">
+            <!-- Personal Information -->
+            <div class="form-group">
+                <label for="firstName">First Name:</label>
+                <input type="text" id="firstName" name="firstName" th:value="${user.currentPerson?.firstName}"/>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" th:value="${user.currentPerson?.lastName}"/>
+            </div>
+            <div class="form-group">
+                <label for="middleName">Middle Name:</label>
+                <input type="text" id="middleName" name="middleName" th:value="${user.currentPerson?.middleName}"/>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" th:value="${user.currentPerson?.email}"/>
+            </div>
+            <!-- Account Details -->
+            <div class="form-group full-width">
+                <label for="login">Login:</label>
+                <input type="text" id="login" th:value="${user.login}" disabled/>
+            </div>
+            <div class="form-group full-width">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" th:value="${user.username}"/>
+            </div>
+            <div class="form-group full-width">
+                <label for="role">Role:</label>
+                <input type="text" id="role" th:value="${#strings.listJoin(user.roles, ', ')}" disabled/>
+            </div>
+            <!-- Password Change (Collapsible) -->
+            <div class="form-group full-width collapsible">
+                <button type="button" class="toggle-password">Change Password</button>
+                <div class="password-fields" style="display: none;">
+                    <div class="form-group">
+                        <label for="currentPassword">Current Password:</label>
+                        <input type="password" id="currentPassword" name="currentPassword"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password:</label>
+                        <input type="password" id="newPassword" name="newPassword"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password:</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions full-width">
+                <button type="submit">Update Profile</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('.toggle-password').click(function () {
+            $(this).next('.password-fields').slideToggle('fast');
+        });
+    });
+</script>
+</html>
