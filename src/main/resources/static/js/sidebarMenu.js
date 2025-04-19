@@ -1,16 +1,18 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const menuItems = document.querySelectorAll('.page-sidebar-menu li.has-sub > a');
-    menuItems.forEach(function (item) {
-        item.addEventListener('click', function (e) {
-            e.preventDefault();
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("📦 sidebarMenu.js готов");
 
-            const parent = this.parentElement;
-            parent.classList.toggle('open');
+    // Навесим обработку кликов на весь пункт меню
+    setTimeout(() => {
+        document.querySelectorAll(".menu-item.has-children > .menu-link").forEach(function (link) {
+            link.addEventListener("click", function (e) {
+                e.preventDefault(); // чтобы не прыгал на #
+                const parentLi = link.closest("li");
+                parentLi.classList.toggle("open");
+                const arrow = link.querySelector(".arrow-icon");
+                if (arrow) arrow.classList.toggle("rotated");
 
-            const submenu = parent.querySelector('.sub-menu');
-            if (submenu) {
-                submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
-            }
+                console.log("🔽 Переключено подменю:", parentLi);
+            });
         });
-    });
+    }, 100);
 });

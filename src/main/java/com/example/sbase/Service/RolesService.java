@@ -51,16 +51,18 @@ public class RolesService {
 
     @PostConstruct
     public void init() {
-        addRoleIfNotExists("ROLE_USER", "User role");
-        addRoleIfNotExists("ROLE_ADMIN", "Admin role");
-        addRoleIfNotExists("ROLE_ANONYMOUS", "Anonymous role");
-        addRoleIfNotExists("ROLE_ASSIGNER", "Assigner role");
-        addRoleIfNotExists("ROLE_GUEST", "Guest role");
+        addRoleIfNotExists("ROLE_USER", "User role", true);
+        addRoleIfNotExists("ROLE_ADMIN", "Admin role", false);
+        addRoleIfNotExists("ROLE_ANONYMOUS", "Anonymous role", false);
+        addRoleIfNotExists("ROLE_ASSIGNER", "Assigner role", false);
+        addRoleIfNotExists("ROLE_GUEST", "Guest role", false);
     }
 
-    private void addRoleIfNotExists(String name, String description) {
+    private void addRoleIfNotExists(String name, String description, boolean isDefaultBySystem) {
         if (roleRepository.findByName(name).isEmpty()) {
-            roleRepository.save(new Roles(name, description));
+            Roles role = new Roles(name, description);
+            role.setDefaultRole(isDefaultBySystem);
+            roleRepository.save(role);
         }
     }
 

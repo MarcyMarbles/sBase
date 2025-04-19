@@ -20,13 +20,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/protected/persons")
-public class PersonController {
+public class PersonRestController {
 
     private final PersonService personService;
     private final JwtUtils jwtUtils;
     private final UserService userService;
 
-    public PersonController(PersonService personService, JwtUtils jwtUtils, UserService userService) {
+    public PersonRestController(PersonService personService, JwtUtils jwtUtils, UserService userService) {
         this.personService = personService;
         this.jwtUtils = jwtUtils;
         this.userService = userService;

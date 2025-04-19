@@ -52,6 +52,7 @@ C:.
 |   |   dataSources.local.xml
 |   |   dataSources.xml
 |   |   gradle.xml
+|   |   jsLibraryMappings.xml
 |   |   kotlinc.xml
 |   |   misc.xml
 |   |   modules.xml
@@ -72,6 +73,7 @@ C:.
 |   |                       \---schema
 |   |                               information_schema.FNRwLQ.meta
 |   |                               pg_catalog.0S1ZNQ.meta
+|   |                               pg_catalog.0S1ZNQ.zip
 |   |                               public.abK9xQ.meta
 |   |                               
 |   \---modules
@@ -86,6 +88,10 @@ C:.
 |   |                   \---sbase
 |   |                       |   sBaseApplication.class
 |   |                       |   
+|   |                       +---Components
+|   |                       |       InitRunner.class
+|   |                       |       MenuScanner.class
+|   |                       |       
 |   |                       +---Configs
 |   |                       |       GlobalConfig.class
 |   |                       |       
@@ -95,40 +101,41 @@ C:.
 |   |                       |   |       UserControllerQL.class
 |   |                       |   |       
 |   |                       |   +---MVC
-|   |                       |   |       HomeMVCController.class
-|   |                       |   |       LoginMVCController.class
-|   |                       |   |       MenuController.class
-|   |                       |   |       ProfileController.class
-|   |                       |   |       RegisterMVCController.class
-|   |                       |   |       TasksController.class
-|   |                       |   |       UiAdvice$CustomErrorController.class
-|   |                       |   |       UiAdvice.class
-|   |                       |   |       
+|   |                       |   |   |   HomeController.class
+|   |                       |   |   |   LoginMVCController.class
+|   |                       |   |   |   MenuController.class
+|   |                       |   |   |   PersonController.class
+|   |                       |   |   |   ProfileController.class
+|   |                       |   |   |   RegisterMVCController.class
+|   |                       |   |   |   UiAdvice$CustomErrorController.class
+|   |                       |   |   |   UiAdvice.class
+|   |                       |   |   |   
+|   |                       |   |   \---Folders
+|   |                       |   |           AbstractFolder.class
+|   |                       |   |           AdminFolderController.class
+|   |                       |   |           
 |   |                       |   \---Rest
 |   |                       |           AuthController$TokenResponse.class
 |   |                       |           AuthController.class
-|   |                       |           PersonController$PersonResponse.class
-|   |                       |           PersonController.class
-|   |                       |           TaskController$TaskRequestPOJO.class
-|   |                       |           TaskController.class
+|   |                       |           PersonRestController$PersonResponse.class
+|   |                       |           PersonRestController.class
 |   |                       |           
 |   |                       +---Entity
-|   |                       |   |   Category.class
 |   |                       |   |   FileDescriptor.class
 |   |                       |   |   MappedLocalizedClass$1.class
 |   |                       |   |   MappedLocalizedClass.class
 |   |                       |   |   MappedSuperClass.class
 |   |                       |   |   MenuElement.class
 |   |                       |   |   Person.class
-|   |                       |   |   Priority.class
 |   |                       |   |   Roles.class
-|   |                       |   |   Tasks.class
 |   |                       |   |   User.class
 |   |                       |   |   
+|   |                       |   +---Interfaces
+|   |                       |   |       Menuable.class
+|   |                       |   |       
 |   |                       |   \---NotPersistent
 |   |                       |           Langs.class
 |   |                       |           Menu.class
-|   |                       |           TaskStats.class
 |   |                       |           
 |   |                       +---POJOs
 |   |                       |       PersonPOJO.class
@@ -138,13 +145,10 @@ C:.
 |   |                       |       UserResponseEnt.class
 |   |                       |       
 |   |                       +---Repos
-|   |                       |       CategoryRepository.class
 |   |                       |       FileDescriptorRepository.class
 |   |                       |       MenuElementRepository.class
 |   |                       |       PersonRepository.class
-|   |                       |       PriorityRepository.class
 |   |                       |       RoleRepository.class
-|   |                       |       TasksRepository.class
 |   |                       |       UserRepository.class
 |   |                       |       
 |   |                       +---Security
@@ -155,14 +159,11 @@ C:.
 |   |                       |       
 |   |                       +---Service
 |   |                       |       AuthService.class
-|   |                       |       CategoryService.class
 |   |                       |       FileDescriptorService.class
 |   |                       |       JwtAuthenticationSuccessHandler.class
 |   |                       |       MenuService.class
 |   |                       |       PersonService.class
-|   |                       |       PriorityService.class
 |   |                       |       RolesService.class
-|   |                       |       TaskService.class
 |   |                       |       UserDetailsImpl.class
 |   |                       |       UserDetailsServiceImpl.class
 |   |                       |       UserService.class
@@ -212,7 +213,6 @@ C:.
 |   |       |   |   login.html
 |   |       |   |   profile.html
 |   |       |   |   register.html
-|   |       |   |   tasks.html
 |   |       |   |   users.html
 |   |       |   |   
 |   |       |   \---fragments
@@ -228,48 +228,7 @@ C:.
 |           \---compileTransaction
 |               +---backup-dir
 |               \---stash-dir
-|                       AuthController$TokenResponse.class.uniqueId35
-|                       AuthController.class.uniqueId19
-|                       AuthService.class.uniqueId29
-|                       Category.class.uniqueId39
-|                       CategoryRepository.class.uniqueId36
-|                       CategoryService.class.uniqueId27
-|                       HomeMVCController.class.uniqueId31
-|                       Menu.class.uniqueId32
-|                       MenuElement.class.uniqueId28
-|                       MenuElementRepository.class.uniqueId8
-|                       MenuService.class.uniqueId30
-|                       Person.class.uniqueId41
-|                       PersonController$PersonResponse.class.uniqueId25
-|                       PersonController.class.uniqueId23
-|                       PersonControllerQL.class.uniqueId38
-|                       PersonRepository.class.uniqueId21
-|                       PersonService.class.uniqueId16
-|                       Priority.class.uniqueId11
-|                       PriorityRepository.class.uniqueId14
-|                       PriorityService.class.uniqueId17
-|                       ProfileController.class.uniqueId3
-|                       RegisterMVCController.class.uniqueId22
-|                       RoleDeserializer.class.uniqueId0
-|                       RoleRepository.class.uniqueId34
-|                       Roles.class.uniqueId20
-|                       RolesService.class.uniqueId2
-|                       SecurityConfig.class.uniqueId5
-|                       TaskController$TaskRequestPOJO.class.uniqueId26
-|                       TaskController.class.uniqueId15
-|                       Tasks.class.uniqueId12
-|                       TasksController.class.uniqueId9
-|                       TaskService.class.uniqueId18
-|                       TasksRepository.class.uniqueId6
-|                       TaskStats.class.uniqueId10
-|                       UiAdvice$CustomErrorController.class.uniqueId40
-|                       UiAdvice.class.uniqueId4
-|                       User.class.uniqueId33
-|                       UserDetailsImpl.class.uniqueId24
-|                       UserDetailsServiceImpl.class.uniqueId37
-|                       UserRepository.class.uniqueId7
-|                       UserResponseEnt.class.uniqueId1
-|                       UserService.class.uniqueId13
+|                       PersonController.class.uniqueId0
 |                       
 +---gradle
 |   \---wrapper
@@ -284,6 +243,10 @@ C:.
         |           \---sbase
         |               |   sBaseApplication.java
         |               |   
+        |               +---Components
+        |               |       InitRunner.java
+        |               |       MenuScanner.java
+        |               |       
         |               +---Configs
         |               |       GlobalConfig.java
         |               |       
@@ -293,17 +256,21 @@ C:.
         |               |   |       UserControllerQL.java
         |               |   |       
         |               |   +---MVC
-        |               |   |       HomeMVCController.java
-        |               |   |       LoginMVCController.java
-        |               |   |       MenuController.java
-        |               |   |       ProfileController.java
-        |               |   |       RegisterMVCController.java
-        |               |   |       UiAdvice.java
-        |               |   |       
+        |               |   |   |   HomeController.java
+        |               |   |   |   LoginMVCController.java
+        |               |   |   |   MenuController.java
+        |               |   |   |   PersonController.java
+        |               |   |   |   ProfileController.java
+        |               |   |   |   RegisterMVCController.java
+        |               |   |   |   UiAdvice.java
+        |               |   |   |   
+        |               |   |   \---Folders
+        |               |   |           AbstractFolder.java
+        |               |   |           AdminFolderController.java
+        |               |   |           
         |               |   \---Rest
         |               |           AuthController.java
-        |               |           PersonController.java
-        |               |           TaskController.java
+        |               |           PersonRestController.java
         |               |           
         |               +---Entity
         |               |   |   FileDescriptor.java
@@ -314,10 +281,12 @@ C:.
         |               |   |   Roles.java
         |               |   |   User.java
         |               |   |   
+        |               |   +---Interfaces
+        |               |   |       Menuable.java
+        |               |   |       
         |               |   \---NotPersistent
         |               |           Langs.java
         |               |           Menu.java
-        |               |           TaskStats.java
         |               |           
         |               +---POJOs
         |               |       PersonPOJO.java

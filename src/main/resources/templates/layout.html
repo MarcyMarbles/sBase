@@ -9,7 +9,7 @@
 </head>
 <body th:fragment="bodyContent">
     <aside>
-        <div th:replace="~{fragments/sidebarMenu :: sidebarMenu(menu=${menu})}"></div>
+        <div th:replace="~{fragments/sidebarMenu.html :: sidebar(menu=${menu})}"></div>
     </aside>
     <div class="content-wrapper">
         <main>
@@ -17,6 +17,5 @@
         </main>
     </div>
 <script th:src="@{/js/sidebarMenu.js}"></script>
-<script th:src="@{/js/modal.js}"></script>
 </body>
 </html>

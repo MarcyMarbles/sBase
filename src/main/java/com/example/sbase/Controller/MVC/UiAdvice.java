@@ -2,6 +2,8 @@ package com.example.sbase.Controller.MVC;
 
 import com.example.sbase.Entity.MenuElement;
 import com.example.sbase.Entity.Roles;
+import com.example.sbase.Mappers.MenuMapper;
+import com.example.sbase.POJOs.MenuPOJO;
 import com.example.sbase.Service.MenuService;
 import com.example.sbase.Service.RolesService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,25 +12,25 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Controller
 @ControllerAdvice
 public class UiAdvice {
-    private final MenuController menuController;
     private final RolesService rolesService;
     private final MenuService menuService;
+    private final MenuMapper menuMapper;
 
-    public UiAdvice(MenuController menuController, RolesService rolesService, MenuService menuService) {
-        this.menuController = menuController;
+    public UiAdvice(RolesService rolesService, MenuService menuService, MenuMapper menuMapper) {
         this.rolesService = rolesService;
         this.menuService = menuService;
+        this.menuMapper = menuMapper;
     }
 
     @Controller
@@ -47,10 +49,11 @@ public class UiAdvice {
     }
 
     @ModelAttribute("menu")
-    public Set<MenuElement> addMenu(Model model) {
+    public List<MenuPOJO> addMenu() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Set<Roles> roles = rolesService.getUserRoles(auth);
-        return menuService.generateMenu(roles);
+        LinkedHashSet<MenuElement> flat = menuService.generateMenu(roles);
+        return menuMapper.toDtoTree(flat);
     }
 
     @ModelAttribute("usr")

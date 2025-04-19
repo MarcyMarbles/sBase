@@ -1,5 +1,6 @@
 package com.example.sbase.Entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
@@ -17,6 +18,11 @@ public class MenuElement extends MappedSuperClass {
 
     private String icon;
     private String url;
+    private String name; // название элемента меню
+    private String code; // код элемента меню (для поиска в БД)
+    private String parentCode; // код родительского элемента меню (для поиска в БД)
+    private boolean groupp = false; // true если это папка
+    // p в конце чтобы Postgres не считал это ключевым словом
 
     @ManyToMany
     private List<Roles> accessibleViaRoles;
