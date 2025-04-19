@@ -4,12 +4,15 @@ import com.example.sbase.Entity.Person;
 import com.example.sbase.Entity.Roles;
 import com.example.sbase.Entity.User;
 import com.example.sbase.POJOs.UserAuthPOJO;
+import com.example.sbase.POJOs.UserMVCRegisterPOJO;
 import com.example.sbase.Repos.UserRepository;
 import com.example.sbase.Security.JwtUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -65,8 +68,8 @@ public class UserService {
 
     public boolean isUserAlreadyCreated(UserAuthPOJO userAuthPOJO) {
         return userRepository
-                       .findByLogin(userAuthPOJO.login())
-                       .orElse(null) != null;
+                .findByLogin(userAuthPOJO.login())
+                .orElse(null) != null;
     }
 
     public User extractUserFromToken(String token) {
@@ -95,6 +98,29 @@ public class UserService {
 
     public User getUserById(Integer id) {
         return userRepository.findById(id).orElse(null);
+    }
+
+    public boolean existsByLogin(String login) {
+        return userRepository.existsByLogin(login);
+    }
+
+    public void register(UserMVCRegisterPOJO dto){
+        List<User> userList = new ArrayList<>();
+        User user = new User();
+        user.setLogin(dto.getLogin());
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+        user.setUsername(dto.getLogin());
+        user.setRoles(Set.of(rolesService.getDefaultRole()));
+        user = userRepository.save(user);
+        userList.add(user);
+
+        Person person = new Person();
+        person.setFirstName(dto.getFirstName());
+        person.setLastName(dto.getLastName());
+        person.setMiddleName(dto.getMiddleName());
+        person.setEmail(dto.getEmail());
+        person.setUsers(userList);
+        personService.savePerson(person);
     }
 
 }

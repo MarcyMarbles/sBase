@@ -72,5 +72,9 @@ public class RolesService {
         return roles;
     }
 
+    public Roles getDefaultRole() {
+        return roleRepository.findByDefaultRole((true)).orElse(null);
+    }
+
 
 }

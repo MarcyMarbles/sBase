@@ -11,6 +11,8 @@ C:.
 |   tree-view.bat.bat
 |   
 +---.gradle
+|   |   file-system.probe
+|   |   
 |   +---8.12.1
 |   |   |   gc.properties
 |   |   |   
@@ -20,6 +22,7 @@ C:.
 |   |   |       sha1-checksums.bin
 |   |   |       
 |   |   +---executionHistory
+|   |   |       executionHistory.bin
 |   |   |       executionHistory.lock
 |   |   |       
 |   |   +---expanded
@@ -27,12 +30,15 @@ C:.
 |   |   |       last-build.bin
 |   |   |       
 |   |   +---fileHashes
+|   |   |       fileHashes.bin
 |   |   |       fileHashes.lock
+|   |   |       resourceHashesCache.bin
 |   |   |       
 |   |   \---vcsMetadata
 |   +---buildOutputCleanup
 |   |       buildOutputCleanup.lock
 |   |       cache.properties
+|   |       outputFiles.bin
 |   |       
 |   +---kotlin
 |   |   \---errors
@@ -40,148 +46,347 @@ C:.
 |           gc.properties
 |           
 +---.idea
-|       .gitignore
-|       compiler.xml
-|       gradle.xml
-|       kotlinc.xml
-|       misc.xml
-|       vcs.xml
-|       workspace.xml
-|       
+|   |   .gitignore
+|   |   .name
+|   |   compiler.xml
+|   |   dataSources.local.xml
+|   |   dataSources.xml
+|   |   gradle.xml
+|   |   kotlinc.xml
+|   |   misc.xml
+|   |   modules.xml
+|   |   sbase.iml
+|   |   vcs.xml
+|   |   workspace.xml
+|   |   
+|   +---dataSources
+|   |   |   d211be4d-50db-4b6b-8bec-e1d16f385757.xml
+|   |   |   
+|   |   \---d211be4d-50db-4b6b-8bec-e1d16f385757
+|   |       \---storage_v2
+|   |           \---_src_
+|   |               \---database
+|   |                   |   secondmc.CgU8OA.meta
+|   |                   |   
+|   |                   \---secondmc.CgU8OA
+|   |                       \---schema
+|   |                               information_schema.FNRwLQ.meta
+|   |                               pg_catalog.0S1ZNQ.meta
+|   |                               public.abK9xQ.meta
+|   |                               
+|   \---modules
+|           sBase.main.iml
+|           
++---build
+|   +---classes
+|   |   \---java
+|   |       \---main
+|   |           \---com
+|   |               \---example
+|   |                   \---sbase
+|   |                       |   sBaseApplication.class
+|   |                       |   
+|   |                       +---Configs
+|   |                       |       GlobalConfig.class
+|   |                       |       
+|   |                       +---Controller
+|   |                       |   +---GraphQL
+|   |                       |   |       PersonControllerQL.class
+|   |                       |   |       UserControllerQL.class
+|   |                       |   |       
+|   |                       |   +---MVC
+|   |                       |   |       HomeMVCController.class
+|   |                       |   |       LoginMVCController.class
+|   |                       |   |       MenuController.class
+|   |                       |   |       ProfileController.class
+|   |                       |   |       RegisterMVCController.class
+|   |                       |   |       TasksController.class
+|   |                       |   |       UiAdvice$CustomErrorController.class
+|   |                       |   |       UiAdvice.class
+|   |                       |   |       
+|   |                       |   \---Rest
+|   |                       |           AuthController$TokenResponse.class
+|   |                       |           AuthController.class
+|   |                       |           PersonController$PersonResponse.class
+|   |                       |           PersonController.class
+|   |                       |           TaskController$TaskRequestPOJO.class
+|   |                       |           TaskController.class
+|   |                       |           
+|   |                       +---Entity
+|   |                       |   |   Category.class
+|   |                       |   |   FileDescriptor.class
+|   |                       |   |   MappedLocalizedClass$1.class
+|   |                       |   |   MappedLocalizedClass.class
+|   |                       |   |   MappedSuperClass.class
+|   |                       |   |   MenuElement.class
+|   |                       |   |   Person.class
+|   |                       |   |   Priority.class
+|   |                       |   |   Roles.class
+|   |                       |   |   Tasks.class
+|   |                       |   |   User.class
+|   |                       |   |   
+|   |                       |   \---NotPersistent
+|   |                       |           Langs.class
+|   |                       |           Menu.class
+|   |                       |           TaskStats.class
+|   |                       |           
+|   |                       +---POJOs
+|   |                       |       PersonPOJO.class
+|   |                       |       UserAuthPOJO.class
+|   |                       |       UserMVCRegisterPOJO.class
+|   |                       |       UserProfileForm.class
+|   |                       |       UserResponseEnt.class
+|   |                       |       
+|   |                       +---Repos
+|   |                       |       CategoryRepository.class
+|   |                       |       FileDescriptorRepository.class
+|   |                       |       MenuElementRepository.class
+|   |                       |       PersonRepository.class
+|   |                       |       PriorityRepository.class
+|   |                       |       RoleRepository.class
+|   |                       |       TasksRepository.class
+|   |                       |       UserRepository.class
+|   |                       |       
+|   |                       +---Security
+|   |                       |       JwtAuthenticationFilter.class
+|   |                       |       JwtService.class
+|   |                       |       JwtUtils.class
+|   |                       |       SecurityConfig.class
+|   |                       |       
+|   |                       +---Service
+|   |                       |       AuthService.class
+|   |                       |       CategoryService.class
+|   |                       |       FileDescriptorService.class
+|   |                       |       JwtAuthenticationSuccessHandler.class
+|   |                       |       MenuService.class
+|   |                       |       PersonService.class
+|   |                       |       PriorityService.class
+|   |                       |       RolesService.class
+|   |                       |       TaskService.class
+|   |                       |       UserDetailsImpl.class
+|   |                       |       UserDetailsServiceImpl.class
+|   |                       |       UserService.class
+|   |                       |       
+|   |                       \---XmlUtils
+|   |                               RoleDeserializer.class
+|   |                               
+|   +---generated
+|   |   \---sources
+|   |       +---annotationProcessor
+|   |       |   \---java
+|   |       |       \---main
+|   |       \---headers
+|   |           \---java
+|   |               \---main
+|   +---reports
+|   |   \---problems
+|   |           problems-report.html
+|   |           
+|   +---resources
+|   |   \---main
+|   |       |   application.properties
+|   |       |   bootstrap.yml
+|   |       |   
+|   |       +---graphql
+|   |       |       schema.graphqls
+|   |       |       
+|   |       +---static
+|   |       |   +---css
+|   |       |   |       styles.css
+|   |       |   |       
+|   |       |   +---images
+|   |       |   |       default-profile.jpg
+|   |       |   |       
+|   |       |   \---js
+|   |       |           modal.js
+|   |       |           profileValidator.js
+|   |       |           redirector.js
+|   |       |           registration.js
+|   |       |           sidebarMenu.js
+|   |       |           
+|   |       +---templates
+|   |       |   |   DEFAULTTEMPLATEDONTUSE.html
+|   |       |   |   error.html
+|   |       |   |   home.html
+|   |       |   |   layout.html
+|   |       |   |   login.html
+|   |       |   |   profile.html
+|   |       |   |   register.html
+|   |       |   |   tasks.html
+|   |       |   |   users.html
+|   |       |   |   
+|   |       |   \---fragments
+|   |       |           sidebarMenu.html
+|   |       |           
+|   |       \---xml
+|   |               menu.xml
+|   |               
+|   \---tmp
+|       \---compileJava
+|           |   previous-compilation-data.bin
+|           |   
+|           \---compileTransaction
+|               +---backup-dir
+|               \---stash-dir
+|                       AuthController$TokenResponse.class.uniqueId35
+|                       AuthController.class.uniqueId19
+|                       AuthService.class.uniqueId29
+|                       Category.class.uniqueId39
+|                       CategoryRepository.class.uniqueId36
+|                       CategoryService.class.uniqueId27
+|                       HomeMVCController.class.uniqueId31
+|                       Menu.class.uniqueId32
+|                       MenuElement.class.uniqueId28
+|                       MenuElementRepository.class.uniqueId8
+|                       MenuService.class.uniqueId30
+|                       Person.class.uniqueId41
+|                       PersonController$PersonResponse.class.uniqueId25
+|                       PersonController.class.uniqueId23
+|                       PersonControllerQL.class.uniqueId38
+|                       PersonRepository.class.uniqueId21
+|                       PersonService.class.uniqueId16
+|                       Priority.class.uniqueId11
+|                       PriorityRepository.class.uniqueId14
+|                       PriorityService.class.uniqueId17
+|                       ProfileController.class.uniqueId3
+|                       RegisterMVCController.class.uniqueId22
+|                       RoleDeserializer.class.uniqueId0
+|                       RoleRepository.class.uniqueId34
+|                       Roles.class.uniqueId20
+|                       RolesService.class.uniqueId2
+|                       SecurityConfig.class.uniqueId5
+|                       TaskController$TaskRequestPOJO.class.uniqueId26
+|                       TaskController.class.uniqueId15
+|                       Tasks.class.uniqueId12
+|                       TasksController.class.uniqueId9
+|                       TaskService.class.uniqueId18
+|                       TasksRepository.class.uniqueId6
+|                       TaskStats.class.uniqueId10
+|                       UiAdvice$CustomErrorController.class.uniqueId40
+|                       UiAdvice.class.uniqueId4
+|                       User.class.uniqueId33
+|                       UserDetailsImpl.class.uniqueId24
+|                       UserDetailsServiceImpl.class.uniqueId37
+|                       UserRepository.class.uniqueId7
+|                       UserResponseEnt.class.uniqueId1
+|                       UserService.class.uniqueId13
+|                       
 +---gradle
 |   \---wrapper
 |           gradle-wrapper.jar
 |           gradle-wrapper.properties
 |           
 \---src
-    +---main
-    |   +---java
-    |   |   \---com
-    |   |       \---example
-    |   |           \---todolist
-    |   |               |   ToDoListApplication.java
-    |   |               |   
-    |   |               +---Configs
-    |   |               |       GlobalConfig.java
-    |   |               |       
-    |   |               +---Controller
-    |   |               |   +---GraphQL
-    |   |               |   |       PersonControllerQL.java
-    |   |               |   |       UserControllerQL.java
-    |   |               |   |       
-    |   |               |   +---MVC
-    |   |               |   |       HomeMVCController.java
-    |   |               |   |       LoginMVCController.java
-    |   |               |   |       MenuController.java
-    |   |               |   |       ProfileController.java
-    |   |               |   |       RegisterMVCController.java
-    |   |               |   |       TasksController.java
-    |   |               |   |       UiAdvice.java
-    |   |               |   |       
-    |   |               |   \---Rest
-    |   |               |           AuthController.java
-    |   |               |           PersonController.java
-    |   |               |           TaskController.java
-    |   |               |           
-    |   |               +---Entity
-    |   |               |   |   Category.java
-    |   |               |   |   FileDescriptor.java
-    |   |               |   |   MappedLocalizedClass.java
-    |   |               |   |   MappedSuperClass.java
-    |   |               |   |   MenuElement.java
-    |   |               |   |   Person.java
-    |   |               |   |   Priority.java
-    |   |               |   |   Roles.java
-    |   |               |   |   Tasks.java
-    |   |               |   |   User.java
-    |   |               |   |   
-    |   |               |   \---NotPersistent
-    |   |               |           Langs.java
-    |   |               |           Menu.java
-    |   |               |           TaskStats.java
-    |   |               |           
-    |   |               +---POJOs
-    |   |               |       PersonPOJO.java
-    |   |               |       UserAuthPOJO.java
-    |   |               |       UserMVCRegisterPOJO.java
-    |   |               |       UserProfileForm.java
-    |   |               |       UserResponseEnt.java
-    |   |               |       
-    |   |               +---Repos
-    |   |               |       CategoryRepository.java
-    |   |               |       FileDescriptorRepository.java
-    |   |               |       MenuElementRepository.java
-    |   |               |       PersonRepository.java
-    |   |               |       PriorityRepository.java
-    |   |               |       RoleRepository.java
-    |   |               |       TasksRepository.java
-    |   |               |       UserRepository.java
-    |   |               |       
-    |   |               +---Security
-    |   |               |       JwtAuthenticationFilter.java
-    |   |               |       JwtService.java
-    |   |               |       JwtUtils.java
-    |   |               |       SecurityConfig.java
-    |   |               |       
-    |   |               +---Service
-    |   |               |       AuthService.java
-    |   |               |       CategoryService.java
-    |   |               |       FileDescriptorService.java
-    |   |               |       JwtAuthenticationSuccessHandler.java
-    |   |               |       MenuService.java
-    |   |               |       PersonService.java
-    |   |               |       PriorityService.java
-    |   |               |       RolesService.java
-    |   |               |       TaskService.java
-    |   |               |       UserDetailsImpl.java
-    |   |               |       UserDetailsServiceImpl.java
-    |   |               |       UserService.java
-    |   |               |       
-    |   |               \---XmlUtils
-    |   |                       RoleDeserializer.java
-    |   |                       
-    |   \---resources
-    |       |   application.properties
-    |       |   bootstrap.yml
-    |       |   
-    |       +---graphql
-    |       |       schema.graphqls
-    |       |       
-    |       +---static
-    |       |   +---css
-    |       |   |       styles.css
-    |       |   |       
-    |       |   +---images
-    |       |   |       default-profile.jpg
-    |       |   |       
-    |       |   \---js
-    |       |           modal.js
-    |       |           profileValidator.js
-    |       |           redirector.js
-    |       |           registration.js
-    |       |           sidebarMenu.js
-    |       |           
-    |       +---templates
-    |       |   |   DEFAULTTEMPLATEDONTUSE.html
-    |       |   |   error.html
-    |       |   |   home.html
-    |       |   |   layout.html
-    |       |   |   login.html
-    |       |   |   profile.html
-    |       |   |   register.html
-    |       |   |   tasks.html
-    |       |   |   users.html
-    |       |   |   
-    |       |   \---fragments
-    |       |           sidebarMenu.html
-    |       |           
-    |       \---xml
-    |               menu.xml
-    |               
-    \---test
-        \---java
-            \---com
-                \---example
-                    \---todolist
-                            ToDoListApplicationTests.java
-                            
+    \---main
+        +---java
+        |   \---com
+        |       \---example
+        |           \---sbase
+        |               |   sBaseApplication.java
+        |               |   
+        |               +---Configs
+        |               |       GlobalConfig.java
+        |               |       
+        |               +---Controller
+        |               |   +---GraphQL
+        |               |   |       PersonControllerQL.java
+        |               |   |       UserControllerQL.java
+        |               |   |       
+        |               |   +---MVC
+        |               |   |       HomeMVCController.java
+        |               |   |       LoginMVCController.java
+        |               |   |       MenuController.java
+        |               |   |       ProfileController.java
+        |               |   |       RegisterMVCController.java
+        |               |   |       UiAdvice.java
+        |               |   |       
+        |               |   \---Rest
+        |               |           AuthController.java
+        |               |           PersonController.java
+        |               |           TaskController.java
+        |               |           
+        |               +---Entity
+        |               |   |   FileDescriptor.java
+        |               |   |   MappedLocalizedClass.java
+        |               |   |   MappedSuperClass.java
+        |               |   |   MenuElement.java
+        |               |   |   Person.java
+        |               |   |   Roles.java
+        |               |   |   User.java
+        |               |   |   
+        |               |   \---NotPersistent
+        |               |           Langs.java
+        |               |           Menu.java
+        |               |           TaskStats.java
+        |               |           
+        |               +---POJOs
+        |               |       PersonPOJO.java
+        |               |       UserAuthPOJO.java
+        |               |       UserMVCRegisterPOJO.java
+        |               |       UserProfileForm.java
+        |               |       UserResponseEnt.java
+        |               |       
+        |               +---Repos
+        |               |       FileDescriptorRepository.java
+        |               |       MenuElementRepository.java
+        |               |       PersonRepository.java
+        |               |       RoleRepository.java
+        |               |       UserRepository.java
+        |               |       
+        |               +---Security
+        |               |       JwtAuthenticationFilter.java
+        |               |       JwtService.java
+        |               |       JwtUtils.java
+        |               |       SecurityConfig.java
+        |               |       
+        |               +---Service
+        |               |       AuthService.java
+        |               |       FileDescriptorService.java
+        |               |       JwtAuthenticationSuccessHandler.java
+        |               |       MenuService.java
+        |               |       PersonService.java
+        |               |       RolesService.java
+        |               |       UserDetailsImpl.java
+        |               |       UserDetailsServiceImpl.java
+        |               |       UserService.java
+        |               |       
+        |               \---XmlUtils
+        |                       RoleDeserializer.java
+        |                       
+        \---resources
+            |   application.properties
+            |   bootstrap.yml
+            |   
+            +---graphql
+            |       schema.graphqls
+            |       
+            +---static
+            |   +---css
+            |   |       styles.css
+            |   |       
+            |   +---images
+            |   |       default-profile.jpg
+            |   |       
+            |   \---js
+            |           modal.js
+            |           profileValidator.js
+            |           redirector.js
+            |           registration.js
+            |           sidebarMenu.js
+            |           
+            +---templates
+            |   |   DEFAULTTEMPLATEDONTUSE.html
+            |   |   error.html
+            |   |   home.html
+            |   |   layout.html
+            |   |   login.html
+            |   |   profile.html
+            |   |   register.html
+            |   |   users.html
+            |   |   
+            |   \---fragments
+            |           sidebarMenu.html
+            |           
+            \---xml
+                    menu.xml
+                    

@@ -1,16 +1,36 @@
 package com.example.sbase.POJOs;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data // кастомная аннотация: password == confirmPassword
 public class UserMVCRegisterPOJO {
-    String username;
-    String password;
-    String confirmPassword;
-    String firstName;
-    String lastName;
-    String middleName;
-    String email;
+
+    @NotBlank
+    @Size(min = 4, max = 32)
+    private String login;
+
+    @NotBlank
+    @Email
+    private String email;
+
+    @NotBlank
+    @Size(min = 2, max = 32)
+    private String firstName;
+
+    @NotBlank
+    @Size(min = 2, max = 32)
+    private String lastName;
+
+    private String middleName;
+
+    @NotBlank
+    @Size(min = 8, max = 64)
+    private String password;
+
+    @NotBlank
+    private String confirmPassword;
+
 }

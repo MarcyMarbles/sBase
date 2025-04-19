@@ -12,6 +12,7 @@ import java.util.Set;
 public class Roles extends MappedSuperClass{
     private String name;
     private String description;
+    private boolean defaultRole = false;
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
@@ -21,6 +22,5 @@ public class Roles extends MappedSuperClass{
         this.description = description;
     }
 
-    public Roles() {
-    }
+    public Roles() {}
 }
