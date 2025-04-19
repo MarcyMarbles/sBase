@@ -1,23 +1,21 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
-    id 'java'
-    id 'org.springframework.boot' version '3.4.2'
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'java-library'
+    id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm' version '1.9.23'
     id 'org.jetbrains.kotlin.plugin.spring' version '1.9.23'
+    id 'io.spring.dependency-management' version '1.1.7' // <-- ВАЖНО
 }
 
+
 group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
-    }
-}
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
     }
 }
 
@@ -26,55 +24,57 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-graphql'
-    implementation 'io.github.wimdeblauwe:htmx-spring-boot:4.0.1'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-    testImplementation 'org.springframework.security:spring-security-test'
-    testImplementation 'org.springframework.graphql:spring-graphql-test'
-    implementation 'com.graphql-java:graphql-java-extended-scalars:22.0'
-    testImplementation 'org.springframework:spring-webflux'
-    compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-    annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
+    api 'org.springframework.boot:spring-boot-starter-security'
+    api 'org.springframework.boot:spring-boot-starter-web'
+    api 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    api 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    api 'org.springframework.boot:spring-boot-starter-graphql'
+    api 'com.graphql-java:graphql-java-extended-scalars:22.0'
+    api 'org.springframework.boot:spring-boot-starter-amqp'
+
+    api 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.1.0'
-    implementation 'jakarta.validation:jakarta.validation-api:3.0.0'
-    implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.18.1'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.18.1'
-    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.1'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
-    implementation 'com.fasterxml.woodstox:woodstox-core:7.1.0'
-    implementation 'org.codehaus.woodstox:stax2-api:4.2.2'
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0-RC2'
+    api 'jakarta.validation:jakarta.validation-api:3.0.0'
+    api 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml:2.18.1'
+    api 'com.fasterxml.jackson.core:jackson-core:2.18.1'
+    api 'com.fasterxml.jackson.core:jackson-annotations:2.18.1'
+    api 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
+    api 'com.fasterxml.woodstox:woodstox-core:7.1.0'
+    api 'org.codehaus.woodstox:stax2-api:4.2.2'
+    api 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0-RC2'
+    implementation 'org.postgresql:postgresql:42.7.3'
+
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
-    implementation 'org.springframework.boot:spring-boot-starter-amqp'
-
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
-
-tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
-    kotlinOptions {
-        jvmTarget = "17"
+tasks.withType(KotlinJvmCompile).configureEach {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
     }
 }
+
+
+publishing {
+    publications {
+        create("mavenJava", MavenPublication) {
+            from components.java
+        }
+    }
+}
+
 
 dependencyManagement {
     imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.2.5"
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:2023.0.1"
     }
 }
+
