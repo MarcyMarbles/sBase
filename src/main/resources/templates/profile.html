@@ -4,6 +4,9 @@
     <title>User Profile</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.5.13/dist/cropper.min.css"/>
+
 </head>
 <body th:replace="~{layout :: bodyContent}">
 <div th:fragment="content">
@@ -11,7 +14,7 @@
         <div class="profile-header">
             <div class="profile-info">
                 <label for="profilePictureFile" class="profile-picture-label">
-                    <img class="avatar"
+                    <img class="avatar profile-picture"
                          th:src="${user.currentPerson?.profilePicture != null} ? @{/profilePicture/{id}(id=${user.id})} : '/images/default-profile.png'"
                          alt="Profile Picture"
                          id="avatarPreview">
@@ -80,6 +83,27 @@
             </div>
         </form>
     </div>
+    <div class="modal" id="cropperModal">
+        <div class="modal-content" style="padding-bottom: 70px; position: relative;">
+            <span class="close" onclick="closeCropperModal()">&times;</span>
+            <h2 style="text-align: center;">Редактировать изображение</h2>
+
+            <div class="cropper-wrapper" style="position: relative; width: 100%; max-width: 400px; margin: 0 auto;">
+                <div class="cropper-mask"></div>
+                <img id="cropperImage" style="max-width: 100%; display: block;">
+            </div>
+
+            <div style="margin-top: var(--spacing-md); text-align: center;">
+                <label for="zoomRange" style="color: var(--text-secondary); margin-right: 10px;">Масштаб</label>
+                <input type="range" id="zoomRange" min="0.1" max="3" step="0.01" value="1">
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="applyCrop()">Отправить</button>
+            </div>
+        </div>
+    </div>
+
 </div>
 </body>
 <script>
@@ -122,16 +146,109 @@
 <script>
     const fileInput = document.getElementById('profilePictureFile');
     const avatarPreview = document.getElementById('avatarPreview');
+    const cropperModal = document.getElementById('cropperModal');
+    const cropperImage = document.getElementById('cropperImage');
+
+    let cropper;
 
     fileInput.addEventListener('change', function () {
-        const file = fileInput.files[0];
+        const file = this.files[0];
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                avatarPreview.src = e.target.result;
+                cropperImage.src = e.target.result;
+                cropperModal.style.display = 'block';
+
+                cropperImage.onload = () => {
+                    if (cropper) cropper.destroy();
+                    cropper = new Cropper(cropperImage, {
+                        viewMode: 1,
+                        background: false,
+                        zoomable: true,
+                        movable: true,
+                        dragMode: 'move',
+
+                        /* квадрат 1:1, весь автокроп, но без ручек */
+                        aspectRatio: 1,
+                        autoCrop: true,
+                        autoCropArea: 1,
+                        cropBoxMovable: false,
+                        cropBoxResizable: false,
+                        minCropBoxWidth: 300,
+                        minCropBoxHeight: 300,
+
+                        responsive: true,
+
+                        ready() {
+                            // центрируем crop-box под твоей маской 300×300
+                            const container = cropper.getContainerData();
+                            cropper.setCropBoxData({
+                                left: (container.width - 300) / 2,
+                                top: (container.height - 300) / 2,
+                                width: 300,
+                                height: 300
+                            });
+                        }
+                    });
+                };
             };
             reader.readAsDataURL(file);
         }
     });
+
+    document.getElementById("zoomRange").addEventListener("input", function () {
+        if (cropper) {
+            cropper.zoomTo(parseFloat(this.value));
+        }
+    });
+
+
+    function applyCrop() {
+        // Берём квадрат из cropper — он уже отскейлен и выровнен
+        const squareCanvas = cropper.getCroppedCanvas({
+            width: 300,
+            height: 300,
+            imageSmoothingEnabled: true,
+            imageSmoothingQuality: 'high'
+        });
+
+        // Создаём круглый canvas
+        const circleCanvas = document.createElement('canvas');
+        const ctx = circleCanvas.getContext('2d');
+        const size = 300;
+
+        circleCanvas.width = size;
+        circleCanvas.height = size;
+
+        // Делаем круглую область
+        ctx.beginPath();
+        ctx.arc(size / 2, size / 2, size / 2, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+
+        // Рисуем квадрат внутри круга
+        ctx.drawImage(squareCanvas, 0, 0, size, size);
+
+        // Показываем preview
+        avatarPreview.src = circleCanvas.toDataURL();
+
+        // Загружаем в input
+        circleCanvas.toBlob(blob => {
+            const croppedFile = new File([blob], "avatar.png", {type: "image/png"});
+            const dt = new DataTransfer();
+            dt.items.add(croppedFile);
+            fileInput.files = dt.files;
+
+            cropperModal.style.display = 'none';
+            cropper.destroy();
+        });
+    }
+
+
+    function closeCropperModal() {
+        cropperModal.style.display = 'none';
+        if (cropper) cropper.destroy();
+    }
+
 </script>
 </html>
