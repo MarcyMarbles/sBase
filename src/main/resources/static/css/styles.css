@@ -883,7 +883,23 @@ button:hover {
     border: 0 !important;
 }
 
-/* твоя круглая маска — оставляем без изменений */
+.cropper-wrapper {
+    position: relative;
+    width: 100%;       /* ваши текущие размеры */
+    max-width: 400px;
+    margin: 0 auto;
+    overflow: hidden;  /* ← вот эта строка! */
+}
+
+/* задаём только одно правило для маски */
 .cropper-wrapper .cropper-mask {
-    /* уже есть у тебя: width, height, border-radius:50%, shadow */
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 300px;                /* размер круга */
+    height: 300px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.7);
+    pointer-events: none;
+    z-index: 10;
 }
