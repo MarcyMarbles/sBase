@@ -4,6 +4,7 @@ import kz.saya.sbase.Entity.Sex
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
+import java.util.Optional
 
 interface SexRepository : JpaRepository<Sex, Int> {
     // Find by localized name
@@ -15,5 +16,5 @@ interface SexRepository : JpaRepository<Sex, Int> {
     fun searchByLang(
         @Param("value") value: String,
         @Param("lang") lang: String
-    ): Sex;
+    ): Optional<Sex>;
 }

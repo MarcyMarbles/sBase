@@ -19,6 +19,6 @@ public class SexService {
     }
 
     public Sex findByName(String name, Langs langs) {
-        return sexRepository.searchByLang(name, langs.name());
+        return sexRepository.searchByLang(name, langs.name()).orElse(null);
     }
 }
