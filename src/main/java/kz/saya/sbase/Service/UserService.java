@@ -56,11 +56,12 @@ public class UserService {
             throw new IllegalStateException("Пароль при передаче из внешнего источника не должен быть установлен");
             // AuthService должен сам установить пароль
         }
-        Roles roles = rolesService.getDefaultRole();
-        if (roles == null) {
-            return null;
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            Roles defaultRole = rolesService.getDefaultRole();
+            if (defaultRole != null) {
+                user.getRoles().add(defaultRole);
+            }
         }
-        user.getRoles().add(roles);
         user.setUsername(user.getLogin());
         return userRepository.save(user);
     }
