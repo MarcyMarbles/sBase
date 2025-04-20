@@ -15,7 +15,7 @@
             <div class="profile-info">
                 <label for="profilePictureFile" class="profile-picture-label">
                     <img class="avatar profile-picture"
-                         th:src="${user.currentPerson?.profilePicture != null} ? @{/profilePicture/{id}(id=${user.id})} : '/images/default-profile.png'"
+                         th:src="${user.currentPerson?.profilePicture != null} ? @{/profilePicture/{id}(id=${user.id})} : '/images/default-profile.jpg'"
                          alt="Profile Picture"
                          id="avatarPreview">
                     <div class="upload-icon"></div>
