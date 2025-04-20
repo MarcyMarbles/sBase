@@ -31,23 +31,19 @@ public class MenuScanner {
         Menuable a = clazz.getAnnotation(Menuable.class);
         MenuElement e = new MenuElement();
         e.setGroupp(a.group());
-        if (a.group()) {
-            e.setUrl("/#");
-        } else {
-            e.setUrl(resolveUrl(clazz));
-        }
+
+        String url = resolveUrl(clazz);
+        e.setUrl(url);
+        e.setCode(url);
+
         e.setName(a.caption());
         e.setIcon(a.icon());
         e.setRank(a.order());
         e.setParentCode(a.parent());
 
-        RequestMapping rm = AnnotationUtils.findAnnotation(clazz, RequestMapping.class);
-        if (rm != null && rm.value().length > 0) {
-            e.setUrl(rm.value()[0]);
-            e.setCode(rm.value()[0]);
-        }
         return e;
     }
+
 
     private String resolveUrl(Class<?> clazz) {
 

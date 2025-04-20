@@ -4,6 +4,8 @@ import com.example.sbase.Entity.FileDescriptor;
 import com.example.sbase.Entity.Person;
 import com.example.sbase.Entity.User;
 import com.example.sbase.POJOs.UserProfileForm;
+import com.example.sbase.Repos.SexRepository;
+import com.example.sbase.Service.CountryService;
 import com.example.sbase.Service.FileDescriptorService;
 import com.example.sbase.Service.UserService;
 import org.springframework.http.MediaType;
@@ -24,16 +26,22 @@ public class ProfileController {
 
     private final UserService userService;
     private final FileDescriptorService fileDescriptorService;
+    private final CountryService countryService;
+    private final SexRepository sexRepository;
 
-    public ProfileController(UserService userService, FileDescriptorService fileDescriptorService) {
+    public ProfileController(UserService userService, FileDescriptorService fileDescriptorService, CountryService countryService, SexRepository sexRepository) {
         this.userService = userService;
         this.fileDescriptorService = fileDescriptorService;
+        this.countryService = countryService;
+        this.sexRepository = sexRepository;
     }
 
     @GetMapping("/profile")
     public String showProfile(Model model, Principal principal) {
         User user = userService.getUserByLogin(principal.getName());
         model.addAttribute("user", user);
+        model.addAttribute("countries", countryService.getAllCountries());
+        model.addAttribute("sexes", userService.getAllSexes());
         return "profile";
     }
 
@@ -51,10 +59,23 @@ public class ProfileController {
         user.setUsername(form.getUsername());
 
         if (person != null) {
-            person.setFirstName(form.getFirstName());
-            person.setLastName(form.getLastName());
-            person.setMiddleName(form.getMiddleName());
+            if (!form.getFullName().equals(person.getFullName())) {
+                String[] nameParts = form.getFullName().split(" ");
+                for (int i = 0; i < nameParts.length; i++) {
+                    if (i == 0) {
+                        person.setFirstName(nameParts[i]);
+                    } else if (i == 1) {
+                        person.setLastName(nameParts[i]);
+                    } else {
+                        person.setMiddleName(nameParts[i]);
+                    }
+                }
+            }
             person.setEmail(form.getEmail());
+            if (form.getSexId() != null) {
+                person.setSex(sexRepository.findById(form.getSexId()).orElse(null));
+            }
+            person.setCountry(form.getCountry());
         }
 
         if (form.getProfilePictureFile() != null && !form.getProfilePictureFile().isEmpty()) {
@@ -88,7 +109,7 @@ public class ProfileController {
     }
 
     @GetMapping(value = "/profilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public ResponseEntity<byte[]> getProfilePicture(@PathVariable Integer id) {
+    public ResponseEntity<byte[]> getProfilePicture(@PathVariable(name = "id") Integer id) {
         // Fetch the user or person entity by ID
         User user = userService.getUserById(id);
 

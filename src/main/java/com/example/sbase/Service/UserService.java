@@ -2,9 +2,11 @@ package com.example.sbase.Service;
 
 import com.example.sbase.Entity.Person;
 import com.example.sbase.Entity.Roles;
+import com.example.sbase.Entity.Sex;
 import com.example.sbase.Entity.User;
 import com.example.sbase.POJOs.UserAuthPOJO;
 import com.example.sbase.POJOs.UserMVCRegisterPOJO;
+import com.example.sbase.Repos.SexRepository;
 import com.example.sbase.Repos.UserRepository;
 import com.example.sbase.Security.JwtUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,13 +26,15 @@ public class UserService {
     private final JwtUtils jwtUtils;
     private final RolesService rolesService;
     private final PersonService personService;
+    private final SexRepository sexRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, RolesService rolesService, PersonService personService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, RolesService rolesService, PersonService personService, SexRepository sexRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
         this.rolesService = rolesService;
         this.personService = personService;
+        this.sexRepository = sexRepository;
     }
 
     public User createUser(User user) {
@@ -121,6 +125,10 @@ public class UserService {
         person.setEmail(dto.getEmail());
         person.setUsers(userList);
         personService.savePerson(person);
+    }
+
+    public List<Sex> getAllSexes() {
+        return sexRepository.findAll();
     }
 
 }

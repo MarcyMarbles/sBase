@@ -4,85 +4,134 @@
     <title>User Profile</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.9/jquery.inputmask.min.js"></script>
-    <script th:src="@{/js/profileValidator.js}"></script>
 </head>
 <body th:replace="~{layout :: bodyContent}">
 <div th:fragment="content">
-    <div class="form-container">
-        <h2>User Profile</h2>
-        <div class="profile-picture-container">
-            <label class="profile-picture-label" for="profilePictureFile">
-                <img class="profile-picture"
-                     th:src="${user.currentPerson?.profilePicture != null} ? @{/profilePicture/{id}(id=${user.id})} : '/images/default-profile.png'"
-                     alt="Profile Picture"/>
-                <span class="upload-icon"></span>
-            </label>
-            <input type="file" id="profilePictureFile" name="profilePictureFile" accept="image/*"
-                   style="display: none;"/>
-            <div th:if="${profilePictureError}" th:text="${profilePictureError}" class="error-message"></div>
-        </div>
-        <form th:action="@{/updateProfile}" method="post" enctype="multipart/form-data">
-            <!-- Personal Information -->
-            <div class="form-group">
-                <label for="firstName">First Name:</label>
-                <input type="text" id="firstName" name="firstName" th:value="${user.currentPerson?.firstName}"/>
-            </div>
-            <div class="form-group">
-                <label for="lastName">Last Name:</label>
-                <input type="text" id="lastName" name="lastName" th:value="${user.currentPerson?.lastName}"/>
-            </div>
-            <div class="form-group">
-                <label for="middleName">Middle Name:</label>
-                <input type="text" id="middleName" name="middleName" th:value="${user.currentPerson?.middleName}"/>
-            </div>
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" th:value="${user.currentPerson?.email}"/>
-            </div>
-            <!-- Account Details -->
-            <div class="form-group full-width">
-                <label for="login">Login:</label>
-                <input type="text" id="login" th:value="${user.login}" disabled/>
-            </div>
-            <div class="form-group full-width">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" th:value="${user.username}"/>
-            </div>
-            <div class="form-group full-width">
-                <label for="role">Role:</label>
-                <input type="text" id="role" th:value="${#strings.listJoin(user.roles, ', ')}" disabled/>
-            </div>
-            <!-- Password Change (Collapsible) -->
-            <div class="form-group full-width collapsible">
-                <button type="button" class="toggle-password">Change Password</button>
-                <div class="password-fields" style="display: none;">
-                    <div class="form-group">
-                        <label for="currentPassword">Current Password:</label>
-                        <input type="password" id="currentPassword" name="currentPassword"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="newPassword">New Password:</label>
-                        <input type="password" id="newPassword" name="newPassword"/>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword">Confirm New Password:</label>
-                        <input type="password" id="confirmPassword" name="confirmPassword"/>
-                    </div>
+    <div class="profile-wrapper">
+        <div class="profile-header">
+            <div class="profile-info">
+                <label for="profilePictureFile" class="profile-picture-label">
+                    <img class="avatar"
+                         th:src="${user.currentPerson?.profilePicture != null} ? @{/profilePicture/{id}(id=${user.id})} : '/images/default-profile.png'"
+                         alt="Profile Picture"
+                         id="avatarPreview">
+                    <div class="upload-icon"></div>
+                </label>
+                <div class="profile-meta">
+                    <h2 th:text="${user.login}" style="text-align: start">Login</h2>
+                    <p th:text="${user.currentPerson?.email}">email@example.com</p>
                 </div>
             </div>
-            <div class="form-actions full-width">
-                <button type="submit">Update Profile</button>
+            <button type="button" class="edit-button" id="editBtn">Edit</button>
+        </div>
+
+        <form th:action="@{/updateProfile}" method="post" enctype="multipart/form-data" class="profile-grid"
+              id="profileForm">
+            <input type="file" name="profilePictureFile" id="profilePictureFile" style="display: none;"
+                   accept="image/*">
+            <div class="profile-group">
+                <label>Full Name</label>
+                <input type="text" name="fullName" th:value="${user.currentPerson?.getFullName()}" disabled>
+            </div>
+            <div class="profile-group">
+                <label>Nick Name</label>
+                <input type="text" name="username" th:value="${user.username}" disabled>
+            </div>
+            <div class="profile-group">
+                <label>Gender</label>
+                <select name="sex.id" disabled>
+                    <option th:each="s : ${sexes}"
+                            th:value="${s.id}"
+                            th:text="${s.getLangValue(user.getLang())}"
+                            th:selected="${user.currentPerson?.sex?.id == s.id}">Gender
+                    </option>
+                </select>
+            </div>
+            <div class="profile-group">
+                <label>Country</label>
+                <select name="country" disabled>
+                    <option th:each="c : ${countries}"
+                            th:value="${c}"
+                            th:text="${c}"
+                            th:selected="${user.currentPerson?.country == c}">
+                    </option>
+                </select>
+            </div>
+            <div class="profile-group">
+                <label>Language</label>
+                <select name="language" disabled>
+                    <option th:selected="${user.lang == 0}">Русский</option>
+                    <option th:selected="${user.lang == 1}">English</option>
+                </select>
+            </div>
+            <div class="profile-group">
+                <label>Time Zone</label>
+                <select name="timezone" disabled>
+                    <option>UTC+5</option>
+                    <option>UTC+6</option>
+                </select>
+            </div>
+            <div class="profile-group full-width">
+                <label>Email</label>
+                <input type="email" name="email" th:value="${user.currentPerson?.email}" disabled>
+            </div>
+            <div class="profile-actions full-width">
+                <button type="submit" id="saveBtn" style="display: none;">Save</button>
             </div>
         </form>
     </div>
 </div>
 </body>
-<script th:inline="javascript">
-    $(document).ready(function () {
-        $('.toggle-password').click(function () {
-            $(this).next('.password-fields').slideToggle('fast');
-        });
+<script>
+    const editBtn = document.getElementById('editBtn');
+    const form = document.getElementById('profileForm');
+    const inputs = form.querySelectorAll('input, select');
+    const saveBtn = document.getElementById('saveBtn');
+
+    let editing = false;
+    const originalValues = {};
+
+    // Сохраняем начальные значения
+    inputs.forEach(el => {
+        if (el.name) {
+            originalValues[el.name] = el.value;
+        }
+    });
+
+    editBtn.addEventListener('click', function () {
+        editing = !editing;
+
+        if (editing) {
+            // Включаем редактирование
+            inputs.forEach(el => el.disabled = false);
+            saveBtn.style.display = 'inline-block';
+            editBtn.textContent = 'Cancel';
+        } else {
+            // Откатываем изменения
+            inputs.forEach(el => {
+                if (el.name && originalValues[el.name] !== undefined) {
+                    el.value = originalValues[el.name];
+                }
+                el.disabled = true;
+            });
+            saveBtn.style.display = 'none';
+            editBtn.textContent = 'Edit';
+        }
+    });
+</script>
+<script>
+    const fileInput = document.getElementById('profilePictureFile');
+    const avatarPreview = document.getElementById('avatarPreview');
+
+    fileInput.addEventListener('change', function () {
+        const file = fileInput.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                avatarPreview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
     });
 </script>
 </html>

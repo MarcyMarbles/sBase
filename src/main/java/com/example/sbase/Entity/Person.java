@@ -17,6 +17,9 @@ public class Person extends MappedSuperClass {
     private String lastName;
     private String middleName;
     private String email;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Sex sex;
+    private String country; // Страна
 
     @ManyToMany
     @JoinTable(
@@ -30,8 +33,8 @@ public class Person extends MappedSuperClass {
     @OneToOne
     private FileDescriptor profilePicture;
 
-    public User getCurrentUser(){
-        if(users.isEmpty()){
+    public User getCurrentUser() {
+        if (users.isEmpty()) {
             return null;
         }
         OffsetDateTime now = OffsetDateTime.now();
@@ -39,5 +42,18 @@ public class Person extends MappedSuperClass {
                 .stream()
                 .filter(e -> e.getStart_date_ts().isBefore(now) && e.getEnd_date_ts().isAfter(now))
                 .findFirst().orElse(null);
+    }
+
+    public String getFullName() {
+        if (firstName == null) {
+            firstName = "";
+        }
+        if (lastName == null) {
+            lastName = "";
+        }
+        if (middleName == null) {
+            middleName = "";
+        }
+        return String.format("%s %s %s", firstName, lastName, middleName);
     }
 }

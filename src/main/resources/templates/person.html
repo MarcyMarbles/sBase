@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Список персон</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body th:replace="~{layout :: bodyContent}">
+
+<div th:fragment="content">
+    <h2>Список персон</h2>
+
+    <form method="get" th:action="@{/person}">
+        <label for="size">Строк на странице:</label>
+        <select name="size" id="size" onchange="this.form.submit()" class="custom-select">
+            <option th:each="i : ${#numbers.sequence(5, 50, 5)}"
+                    th:value="${i}"
+                    th:text="${i}"
+                    th:selected="${i == size}">5
+            </option>
+            <option th:if="${size > 50}" th:value="${size}" th:text="'Произвольно: ' + ${size}" selected></option>
+        </select>
+    </form>
+
+    <div class="datagrid">
+        <table>
+            <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Отчество</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="person : ${persons}">
+                <td th:text="${person.firstName}">Имя</td>
+                <td th:text="${person.lastName}">Фамилия</td>
+                <td th:text="${person.middleName}">Отчество</td>
+                <td th:text="${person.email}">email@example.com</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <ul>
+            <li th:classappend="${currentPage == 0} ? 'disabled'">
+                <a th:href="@{/person(size=${size}, page=${currentPage - 1})}">&laquo;</a>
+            </li>
+
+            <li th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}"
+                th:classappend="${pageNum == currentPage} ? 'active'">
+                <a th:href="@{/person(size=${size}, page=${pageNum})}"
+                   th:text="${pageNum + 1}">1</a>
+            </li>
+
+            <li th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                <a th:href="@{/person(size=${size}, page=${currentPage + 1})}">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

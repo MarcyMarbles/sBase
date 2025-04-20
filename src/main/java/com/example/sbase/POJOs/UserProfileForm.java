@@ -12,10 +12,13 @@ public class UserProfileForm {
     private String lastName;
     private String middleName;
     private String email;
+    private String fullName;
 
     private MultipartFile profilePictureFile;
 
     private String currentPassword;
     private String newPassword;
     private String confirmPassword;
+    private Integer sexId;
+    private String country;
 }
