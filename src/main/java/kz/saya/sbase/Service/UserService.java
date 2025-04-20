@@ -114,6 +114,10 @@ public class UserService {
         personService.savePerson(person);
     }
 
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
     public User getUserById(Integer id) {
         return userRepository.findById(id).orElse(null);
     }
