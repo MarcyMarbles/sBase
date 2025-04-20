@@ -41,12 +41,26 @@ public class UserService {
         if (user.getLogin() == null || user.getPassword() == null) {
             return null;
         }
-        Roles roles = rolesService.getRoleByName("ROLE_USER");
+        Roles roles = rolesService.getDefaultRole();
         if (roles == null) {
             return null;
         }
         user.getRoles().add(roles);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setUsername(user.getLogin());
+        return userRepository.save(user);
+    }
+
+    public User createUserFromExternal(User user) {
+        if (user.getPassword() != null) {
+            throw new IllegalStateException("Пароль при передаче из внешнего источника не должен быть установлен");
+            // AuthService должен сам установить пароль
+        }
+        Roles roles = rolesService.getDefaultRole();
+        if (roles == null) {
+            return null;
+        }
+        user.getRoles().add(roles);
         user.setUsername(user.getLogin());
         return userRepository.save(user);
     }
@@ -108,7 +122,7 @@ public class UserService {
         return userRepository.existsByLogin(login);
     }
 
-    public void register(UserMVCRegisterPOJO dto){
+    public void register(UserMVCRegisterPOJO dto) {
         List<User> userList = new ArrayList<>();
         User user = new User();
         user.setLogin(dto.getLogin());

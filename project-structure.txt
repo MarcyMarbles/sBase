@@ -20,6 +20,8 @@ C:.
 |   |   |       checksums.lock
 |   |   |       md5-checksums.bin
 |   |   |       sha1-checksums.bin
+|   |   |       sha256-checksums.bin
+|   |   |       sha512-checksums.bin
 |   |   |       
 |   |   +---executionHistory
 |   |   |       executionHistory.bin
@@ -41,7 +43,8 @@ C:.
 |   |       outputFiles.bin
 |   |       
 |   +---kotlin
-|   |   \---errors
+|   |   +---errors
+|   |   \---sessions
 |   \---vcs-1
 |           gc.properties
 |           
@@ -52,6 +55,7 @@ C:.
 |   |   dataSources.local.xml
 |   |   dataSources.xml
 |   |   gradle.xml
+|   |   jpa.xml
 |   |   jsLibraryMappings.xml
 |   |   kotlinc.xml
 |   |   misc.xml
@@ -81,96 +85,114 @@ C:.
 |           
 +---build
 |   +---classes
-|   |   \---java
+|   |   +---java
+|   |   |   \---main
+|   |   |       \---kz
+|   |   |           \---saya
+|   |   |               \---sbase
+|   |   |                   |   sBaseApplication.class
+|   |   |                   |   
+|   |   |                   +---Components
+|   |   |                   |       InitRunner.class
+|   |   |                   |       MenuScanner.class
+|   |   |                   |       
+|   |   |                   +---Configs
+|   |   |                   |       GlobalConfig.class
+|   |   |                   |       
+|   |   |                   +---Controller
+|   |   |                   |   +---GraphQL
+|   |   |                   |   |       PersonControllerQL.class
+|   |   |                   |   |       UserControllerQL.class
+|   |   |                   |   |       
+|   |   |                   |   +---MVC
+|   |   |                   |   |   |   HomeController.class
+|   |   |                   |   |   |   LoginMVCController.class
+|   |   |                   |   |   |   MenuController.class
+|   |   |                   |   |   |   PersonController.class
+|   |   |                   |   |   |   ProfileController.class
+|   |   |                   |   |   |   RegisterMVCController.class
+|   |   |                   |   |   |   UiAdvice$CustomErrorController.class
+|   |   |                   |   |   |   UiAdvice.class
+|   |   |                   |   |   |   UserController.class
+|   |   |                   |   |   |   
+|   |   |                   |   |   \---Folders
+|   |   |                   |   |           AbstractFolder.class
+|   |   |                   |   |           AdminFolderController.class
+|   |   |                   |   |           
+|   |   |                   |   \---Rest
+|   |   |                   |           AuthController$TokenResponse.class
+|   |   |                   |           AuthController.class
+|   |   |                   |           PersonRestController$PersonResponse.class
+|   |   |                   |           PersonRestController.class
+|   |   |                   |           
+|   |   |                   +---Entity
+|   |   |                   |   |   FileDescriptor.class
+|   |   |                   |   |   MappedLocalizedClass$1.class
+|   |   |                   |   |   MappedLocalizedClass.class
+|   |   |                   |   |   MappedSuperClass.class
+|   |   |                   |   |   MenuElement.class
+|   |   |                   |   |   Person.class
+|   |   |                   |   |   Roles.class
+|   |   |                   |   |   Sex.class
+|   |   |                   |   |   User.class
+|   |   |                   |   |   
+|   |   |                   |   +---Interfaces
+|   |   |                   |   |       Menuable.class
+|   |   |                   |   |       
+|   |   |                   |   \---NotPersistent
+|   |   |                   |           Langs.class
+|   |   |                   |           Menu.class
+|   |   |                   |           
+|   |   |                   +---Mappers
+|   |   |                   |       MenuMapper.class
+|   |   |                   |       
+|   |   |                   +---POJOs
+|   |   |                   |       MenuPOJO.class
+|   |   |                   |       PersonPOJO.class
+|   |   |                   |       UserAuthPOJO.class
+|   |   |                   |       UserMVCRegisterPOJO.class
+|   |   |                   |       UserProfileForm.class
+|   |   |                   |       UserResponseEnt.class
+|   |   |                   |       
+|   |   |                   +---Repos
+|   |   |                   |       FileDescriptorRepository.class
+|   |   |                   |       MenuElementRepository.class
+|   |   |                   |       PersonRepository.class
+|   |   |                   |       RoleRepository.class
+|   |   |                   |       UserRepository.class
+|   |   |                   |       
+|   |   |                   +---Security
+|   |   |                   |       JwtAuthenticationFilter.class
+|   |   |                   |       JwtService.class
+|   |   |                   |       JwtUtils.class
+|   |   |                   |       SecurityConfig.class
+|   |   |                   |       
+|   |   |                   +---Service
+|   |   |                   |       AuthService.class
+|   |   |                   |       CountryService.class
+|   |   |                   |       FileDescriptorService.class
+|   |   |                   |       JwtAuthenticationSuccessHandler.class
+|   |   |                   |       MenuService.class
+|   |   |                   |       PersonService.class
+|   |   |                   |       RolesService.class
+|   |   |                   |       UserDetailsImpl.class
+|   |   |                   |       UserDetailsServiceImpl.class
+|   |   |                   |       UserService.class
+|   |   |                   |       
+|   |   |                   \---XmlUtils
+|   |   |                           RoleDeserializer.class
+|   |   |                           
+|   |   \---kotlin
 |   |       \---main
-|   |           \---com
-|   |               \---example
-|   |                   \---sbase
-|   |                       |   sBaseApplication.class
-|   |                       |   
-|   |                       +---Components
-|   |                       |       InitRunner.class
-|   |                       |       MenuScanner.class
-|   |                       |       
-|   |                       +---Configs
-|   |                       |       GlobalConfig.class
-|   |                       |       
-|   |                       +---Controller
-|   |                       |   +---GraphQL
-|   |                       |   |       PersonControllerQL.class
-|   |                       |   |       UserControllerQL.class
-|   |                       |   |       
-|   |                       |   +---MVC
-|   |                       |   |   |   HomeController.class
-|   |                       |   |   |   LoginMVCController.class
-|   |                       |   |   |   MenuController.class
-|   |                       |   |   |   PersonController.class
-|   |                       |   |   |   ProfileController.class
-|   |                       |   |   |   RegisterMVCController.class
-|   |                       |   |   |   UiAdvice$CustomErrorController.class
-|   |                       |   |   |   UiAdvice.class
-|   |                       |   |   |   
-|   |                       |   |   \---Folders
-|   |                       |   |           AbstractFolder.class
-|   |                       |   |           AdminFolderController.class
-|   |                       |   |           
-|   |                       |   \---Rest
-|   |                       |           AuthController$TokenResponse.class
-|   |                       |           AuthController.class
-|   |                       |           PersonRestController$PersonResponse.class
-|   |                       |           PersonRestController.class
-|   |                       |           
-|   |                       +---Entity
-|   |                       |   |   FileDescriptor.class
-|   |                       |   |   MappedLocalizedClass$1.class
-|   |                       |   |   MappedLocalizedClass.class
-|   |                       |   |   MappedSuperClass.class
-|   |                       |   |   MenuElement.class
-|   |                       |   |   Person.class
-|   |                       |   |   Roles.class
-|   |                       |   |   User.class
-|   |                       |   |   
-|   |                       |   +---Interfaces
-|   |                       |   |       Menuable.class
-|   |                       |   |       
-|   |                       |   \---NotPersistent
-|   |                       |           Langs.class
-|   |                       |           Menu.class
-|   |                       |           
-|   |                       +---POJOs
-|   |                       |       PersonPOJO.class
-|   |                       |       UserAuthPOJO.class
-|   |                       |       UserMVCRegisterPOJO.class
-|   |                       |       UserProfileForm.class
-|   |                       |       UserResponseEnt.class
-|   |                       |       
-|   |                       +---Repos
-|   |                       |       FileDescriptorRepository.class
-|   |                       |       MenuElementRepository.class
-|   |                       |       PersonRepository.class
-|   |                       |       RoleRepository.class
-|   |                       |       UserRepository.class
-|   |                       |       
-|   |                       +---Security
-|   |                       |       JwtAuthenticationFilter.class
-|   |                       |       JwtService.class
-|   |                       |       JwtUtils.class
-|   |                       |       SecurityConfig.class
-|   |                       |       
-|   |                       +---Service
-|   |                       |       AuthService.class
-|   |                       |       FileDescriptorService.class
-|   |                       |       JwtAuthenticationSuccessHandler.class
-|   |                       |       MenuService.class
-|   |                       |       PersonService.class
-|   |                       |       RolesService.class
-|   |                       |       UserDetailsImpl.class
-|   |                       |       UserDetailsServiceImpl.class
-|   |                       |       UserService.class
-|   |                       |       
-|   |                       \---XmlUtils
-|   |                               RoleDeserializer.class
-|   |                               
+|   |           +---kz
+|   |           |   \---saya
+|   |           |       \---sbase
+|   |           |           \---Repos
+|   |           |                   SexRepository.class
+|   |           |                   
+|   |           \---META-INF
+|   |                   sBase.kotlin_module
+|   |                   
 |   +---generated
 |   |   \---sources
 |   |       +---annotationProcessor
@@ -179,6 +201,119 @@ C:.
 |   |       \---headers
 |   |           \---java
 |   |               \---main
+|   +---kotlin
+|   |   \---compileKotlin
+|   |       +---cacheable
+|   |       |   |   last-build.bin
+|   |       |   |   
+|   |       |   \---caches-jvm
+|   |       |       +---inputs
+|   |       |       |       source-to-output.tab
+|   |       |       |       source-to-output.tab.keystream
+|   |       |       |       source-to-output.tab.keystream.len
+|   |       |       |       source-to-output.tab.len
+|   |       |       |       source-to-output.tab.values.at
+|   |       |       |       source-to-output.tab_i
+|   |       |       |       source-to-output.tab_i.len
+|   |       |       |       
+|   |       |       +---jvm
+|   |       |       |   \---kotlin
+|   |       |       |           class-attributes.tab
+|   |       |       |           class-attributes.tab.keystream
+|   |       |       |           class-attributes.tab.keystream.len
+|   |       |       |           class-attributes.tab.len
+|   |       |       |           class-attributes.tab.values.at
+|   |       |       |           class-attributes.tab_i
+|   |       |       |           class-attributes.tab_i.len
+|   |       |       |           class-fq-name-to-source.tab
+|   |       |       |           class-fq-name-to-source.tab.keystream
+|   |       |       |           class-fq-name-to-source.tab.keystream.len
+|   |       |       |           class-fq-name-to-source.tab.len
+|   |       |       |           class-fq-name-to-source.tab.values.at
+|   |       |       |           class-fq-name-to-source.tab_i
+|   |       |       |           class-fq-name-to-source.tab_i.len
+|   |       |       |           internal-name-to-source.tab
+|   |       |       |           internal-name-to-source.tab.keystream
+|   |       |       |           internal-name-to-source.tab.keystream.len
+|   |       |       |           internal-name-to-source.tab.len
+|   |       |       |           internal-name-to-source.tab.values.at
+|   |       |       |           internal-name-to-source.tab_i
+|   |       |       |           internal-name-to-source.tab_i.len
+|   |       |       |           java-sources-proto-map.tab
+|   |       |       |           java-sources-proto-map.tab.keystream
+|   |       |       |           java-sources-proto-map.tab.keystream.len
+|   |       |       |           java-sources-proto-map.tab.len
+|   |       |       |           java-sources-proto-map.tab.values
+|   |       |       |           java-sources-proto-map.tab.values.at
+|   |       |       |           java-sources-proto-map.tab.values.s
+|   |       |       |           java-sources-proto-map.tab_i
+|   |       |       |           java-sources-proto-map.tab_i.len
+|   |       |       |           proto.tab
+|   |       |       |           proto.tab.keystream
+|   |       |       |           proto.tab.keystream.len
+|   |       |       |           proto.tab.len
+|   |       |       |           proto.tab.values.at
+|   |       |       |           proto.tab_i
+|   |       |       |           proto.tab_i.len
+|   |       |       |           source-to-classes.tab
+|   |       |       |           source-to-classes.tab.keystream
+|   |       |       |           source-to-classes.tab.keystream.len
+|   |       |       |           source-to-classes.tab.len
+|   |       |       |           source-to-classes.tab.values.at
+|   |       |       |           source-to-classes.tab_i
+|   |       |       |           source-to-classes.tab_i.len
+|   |       |       |           subtypes.tab
+|   |       |       |           subtypes.tab.keystream
+|   |       |       |           subtypes.tab.keystream.len
+|   |       |       |           subtypes.tab.len
+|   |       |       |           subtypes.tab.values.at
+|   |       |       |           subtypes.tab_i
+|   |       |       |           subtypes.tab_i.len
+|   |       |       |           supertypes.tab
+|   |       |       |           supertypes.tab.keystream
+|   |       |       |           supertypes.tab.keystream.len
+|   |       |       |           supertypes.tab.len
+|   |       |       |           supertypes.tab.values.at
+|   |       |       |           supertypes.tab_i
+|   |       |       |           supertypes.tab_i.len
+|   |       |       |           
+|   |       |       \---lookups
+|   |       |               counters.tab
+|   |       |               file-to-id.tab
+|   |       |               file-to-id.tab.keystream
+|   |       |               file-to-id.tab.keystream.len
+|   |       |               file-to-id.tab.len
+|   |       |               file-to-id.tab.values.at
+|   |       |               file-to-id.tab_i
+|   |       |               file-to-id.tab_i.len
+|   |       |               id-to-file.tab
+|   |       |               id-to-file.tab.keystream
+|   |       |               id-to-file.tab.keystream.len
+|   |       |               id-to-file.tab.len
+|   |       |               id-to-file.tab.values.at
+|   |       |               id-to-file.tab_i.len
+|   |       |               lookups.tab
+|   |       |               lookups.tab.keystream
+|   |       |               lookups.tab.keystream.len
+|   |       |               lookups.tab.len
+|   |       |               lookups.tab.values.at
+|   |       |               lookups.tab_i
+|   |       |               lookups.tab_i.len
+|   |       |               
+|   |       +---classpath-snapshot
+|   |       |       shrunk-classpath-snapshot.bin
+|   |       |       
+|   |       \---local-state
+|   |               build-history.bin
+|   |               
+|   +---libs
+|   |       sBase-1.0.0.jar
+|   |       
+|   +---publications
+|   |   \---mavenJava
+|   |           module.json
+|   |           pom-default.xml
+|   |           
 |   +---reports
 |   |   \---problems
 |   |           problems-report.html
@@ -199,7 +334,6 @@ C:.
 |   |       |   |       default-profile.jpg
 |   |       |   |       
 |   |       |   \---js
-|   |       |           modal.js
 |   |       |           profileValidator.js
 |   |       |           redirector.js
 |   |       |           registration.js
@@ -211,8 +345,10 @@ C:.
 |   |       |   |   home.html
 |   |       |   |   layout.html
 |   |       |   |   login.html
+|   |       |   |   person.html
 |   |       |   |   profile.html
 |   |       |   |   register.html
+|   |       |   |   user.html
 |   |       |   |   users.html
 |   |       |   |   
 |   |       |   \---fragments
@@ -221,15 +357,83 @@ C:.
 |   |       \---xml
 |   |               menu.xml
 |   |               
+|   +---snapshot
+|   |   \---kotlin
 |   \---tmp
-|       \---compileJava
-|           |   previous-compilation-data.bin
-|           |   
-|           \---compileTransaction
-|               +---backup-dir
-|               \---stash-dir
-|                       PersonController.class.uniqueId0
-|                       
+|       +---compileJava
+|       |   |   previous-compilation-data.bin
+|       |   |   
+|       |   \---compileTransaction
+|       |       +---backup-dir
+|       |       \---stash-dir
+|       |               AbstractFolder.class.uniqueId56
+|       |               AdminFolderController.class.uniqueId11
+|       |               AuthController$TokenResponse.class.uniqueId30
+|       |               AuthController.class.uniqueId16
+|       |               AuthService.class.uniqueId52
+|       |               CountryService.class.uniqueId23
+|       |               FileDescriptor.class.uniqueId6
+|       |               FileDescriptorRepository.class.uniqueId7
+|       |               FileDescriptorService.class.uniqueId47
+|       |               GlobalConfig.class.uniqueId29
+|       |               HomeController.class.uniqueId51
+|       |               InitRunner.class.uniqueId13
+|       |               JwtAuthenticationFilter.class.uniqueId42
+|       |               JwtAuthenticationSuccessHandler.class.uniqueId28
+|       |               JwtService.class.uniqueId44
+|       |               JwtUtils.class.uniqueId24
+|       |               Langs.class.uniqueId15
+|       |               LoginMVCController.class.uniqueId55
+|       |               MappedLocalizedClass$1.class.uniqueId4
+|       |               MappedLocalizedClass.class.uniqueId8
+|       |               MappedSuperClass.class.uniqueId46
+|       |               Menu.class.uniqueId54
+|       |               Menuable.class.uniqueId41
+|       |               MenuController.class.uniqueId22
+|       |               MenuElement.class.uniqueId21
+|       |               MenuElementRepository.class.uniqueId12
+|       |               MenuMapper.class.uniqueId3
+|       |               MenuPOJO.class.uniqueId2
+|       |               MenuScanner.class.uniqueId32
+|       |               MenuService.class.uniqueId53
+|       |               Person.class.uniqueId34
+|       |               PersonController.class.uniqueId10
+|       |               PersonControllerQL.class.uniqueId57
+|       |               PersonPOJO.class.uniqueId36
+|       |               PersonRepository.class.uniqueId49
+|       |               PersonRestController$PersonResponse.class.uniqueId45
+|       |               PersonRestController.class.uniqueId0
+|       |               PersonService.class.uniqueId48
+|       |               ProfileController.class.uniqueId39
+|       |               RegisterMVCController.class.uniqueId50
+|       |               RoleDeserializer.class.uniqueId1
+|       |               RoleRepository.class.uniqueId26
+|       |               Roles.class.uniqueId17
+|       |               RolesService.class.uniqueId38
+|       |               sBaseApplication.class.uniqueId40
+|       |               SecurityConfig.class.uniqueId9
+|       |               Sex.class.uniqueId27
+|       |               UiAdvice$CustomErrorController.class.uniqueId33
+|       |               UiAdvice.class.uniqueId5
+|       |               User.class.uniqueId25
+|       |               UserAuthPOJO.class.uniqueId18
+|       |               UserController.class.uniqueId58
+|       |               UserControllerQL.class.uniqueId20
+|       |               UserDetailsImpl.class.uniqueId19
+|       |               UserDetailsServiceImpl.class.uniqueId31
+|       |               UserMVCRegisterPOJO.class.uniqueId59
+|       |               UserProfileForm.class.uniqueId35
+|       |               UserRepository.class.uniqueId43
+|       |               UserResponseEnt.class.uniqueId37
+|       |               UserService.class.uniqueId14
+|       |               
+|       +---jar
+|       |       MANIFEST.MF
+|       |       
+|       \---publishMavenJavaPublicationToMavenLocal
+|               module-maven-metadata.xml
+|               snapshot-maven-metadata.xml
+|               
 +---gradle
 |   \---wrapper
 |           gradle-wrapper.jar
@@ -238,8 +442,8 @@ C:.
 \---src
     \---main
         +---java
-        |   \---com
-        |       \---example
+        |   \---kz
+        |       \---saya
         |           \---sbase
         |               |   sBaseApplication.java
         |               |   
@@ -263,6 +467,7 @@ C:.
         |               |   |   |   ProfileController.java
         |               |   |   |   RegisterMVCController.java
         |               |   |   |   UiAdvice.java
+        |               |   |   |   UserController.java
         |               |   |   |   
         |               |   |   \---Folders
         |               |   |           AbstractFolder.java
@@ -279,6 +484,7 @@ C:.
         |               |   |   MenuElement.java
         |               |   |   Person.java
         |               |   |   Roles.java
+        |               |   |   Sex.java
         |               |   |   User.java
         |               |   |   
         |               |   +---Interfaces
@@ -288,7 +494,11 @@ C:.
         |               |           Langs.java
         |               |           Menu.java
         |               |           
+        |               +---Mappers
+        |               |       MenuMapper.java
+        |               |       
         |               +---POJOs
+        |               |       MenuPOJO.java
         |               |       PersonPOJO.java
         |               |       UserAuthPOJO.java
         |               |       UserMVCRegisterPOJO.java
@@ -300,6 +510,7 @@ C:.
         |               |       MenuElementRepository.java
         |               |       PersonRepository.java
         |               |       RoleRepository.java
+        |               |       SexRepository.kt
         |               |       UserRepository.java
         |               |       
         |               +---Security
@@ -310,6 +521,7 @@ C:.
         |               |       
         |               +---Service
         |               |       AuthService.java
+        |               |       CountryService.java
         |               |       FileDescriptorService.java
         |               |       JwtAuthenticationSuccessHandler.java
         |               |       MenuService.java
@@ -337,7 +549,6 @@ C:.
             |   |       default-profile.jpg
             |   |       
             |   \---js
-            |           modal.js
             |           profileValidator.js
             |           redirector.js
             |           registration.js
@@ -349,8 +560,10 @@ C:.
             |   |   home.html
             |   |   layout.html
             |   |   login.html
+            |   |   person.html
             |   |   profile.html
             |   |   register.html
+            |   |   user.html
             |   |   users.html
             |   |   
             |   \---fragments

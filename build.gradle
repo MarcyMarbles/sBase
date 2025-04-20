@@ -64,10 +64,20 @@ tasks.withType(KotlinJvmCompile).configureEach {
 
 publishing {
     publications {
-        create("mavenJava", MavenPublication) {
+        mavenJava(MavenPublication) {
             from components.java
+            groupId = 'kz.saya'
+            artifactId = 'sBase'  // например: sbase, rabbit-core
+            version = '0.0.2-SNAPSHOT'
         }
     }
+    repositories {
+        mavenLocal()
+    }
+}
+
+tasks.withType(GenerateModuleMetadata).configureEach {
+    suppressedValidationErrors.add('dependencies-without-versions')
 }
 
 
