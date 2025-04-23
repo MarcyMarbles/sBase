@@ -12,8 +12,11 @@ import java.time.OffsetDateTime;
 @Service
 public class FileDescriptorService {
 
-    @Autowired
-    private FileDescriptorRepository fileDescriptorRepo;
+    private final FileDescriptorRepository fileDescriptorRepo;
+
+    public FileDescriptorService(FileDescriptorRepository fileDescriptorRepo) {
+        this.fileDescriptorRepo = fileDescriptorRepo;
+    }
 
     @Transactional
     public FileDescriptor saveFile(FileDescriptor fileDescriptor) {

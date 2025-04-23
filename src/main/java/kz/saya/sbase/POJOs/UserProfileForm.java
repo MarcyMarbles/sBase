@@ -3,6 +3,8 @@ package kz.saya.sbase.POJOs;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.UUID;
+
 @Data
 public class UserProfileForm {
     private String username;
@@ -19,6 +21,6 @@ public class UserProfileForm {
     private String currentPassword;
     private String newPassword;
     private String confirmPassword;
-    private Integer sexId;
+    private UUID sexId;
     private String country;
 }

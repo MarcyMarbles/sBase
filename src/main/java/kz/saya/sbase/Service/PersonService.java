@@ -6,6 +6,7 @@ import kz.saya.sbase.Repos.PersonRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PersonService {
@@ -25,7 +26,7 @@ public class PersonService {
         return personRepository.save(person);
     }
 
-    public Person getPersonById(Integer id){
+    public Person getPersonById(UUID id){
         return personRepository.findById(id).orElse(null);
     }
     public Optional<Person> getPersonByEmail(String email){

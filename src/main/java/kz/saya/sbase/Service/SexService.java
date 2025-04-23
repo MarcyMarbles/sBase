@@ -6,6 +6,8 @@ import kz.saya.sbase.Repos.SexRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class SexService {
     private final SexRepository sexRepository;
@@ -14,7 +16,7 @@ public class SexService {
         this.sexRepository = sexRepository;
     }
 
-    public Sex findById(Integer id) {
+    public Sex findById(UUID id) {
         return sexRepository.findById(id).orElse(null);
     }
 

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.util.UUID;
 
 @Controller
 public class ProfileController {
@@ -109,7 +110,7 @@ public class ProfileController {
     }
 
     @GetMapping(value = "/profilePicture/{id}", produces = {MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE})
-    public ResponseEntity<byte[]> getProfilePicture(@PathVariable(name = "id") Integer id) {
+    public ResponseEntity<byte[]> getProfilePicture(@PathVariable(name = "id") UUID id) {
         // Fetch the user or person entity by ID
         User user = userService.getUserById(id);
 

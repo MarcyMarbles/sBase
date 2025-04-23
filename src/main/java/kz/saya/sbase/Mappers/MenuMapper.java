@@ -15,7 +15,7 @@ public class MenuMapper {
     public List<MenuPOJO> toDtoTree(Collection<MenuElement> elements) {
 
         // 1. преобразуем каждую сущность в DTO и положим в map по id
-        Map<Integer, MenuPOJO> byId = elements.stream()
+        Map<UUID, MenuPOJO> byId = elements.stream()
                 .collect(Collectors.toMap(MenuElement::getId, this::toDto));
 
         // 2. связываем детей с родителями
@@ -45,11 +45,12 @@ public class MenuMapper {
         d.setIcon(e.getIcon());
         d.setUrl(e.getUrl());
         d.setGroup(e.isGroupp());
+        d.setRank(e.getRank());
         return d;
     }
 
     private void sortRecursively(List<MenuPOJO> list) {
-        list.sort(Comparator.comparingInt(MenuPOJO::getId)); // или по rank, если нужен
+        list.sort(Comparator.comparingInt(MenuPOJO::getRank)); // или по rank, если нужен
         list.forEach(n -> sortRecursively(n.getChildren()));
     }
 }

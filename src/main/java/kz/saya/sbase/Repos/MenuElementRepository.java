@@ -10,8 +10,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface MenuElementRepository extends JpaRepository<MenuElement, Long> {
+public interface MenuElementRepository extends JpaRepository<MenuElement, UUID> {
 
     /**
      * пункты, доступные любому из переданных ролей
