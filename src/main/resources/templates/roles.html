@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <title>Управление ролями</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body th:replace="~{layout :: bodyContent}">
+
+<div th:fragment="content">
+    <h2>Управление ролями</h2>
+
+    <!-- Success and Error Messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <!-- Create New Role Form -->
+    <div class="form-container">
+        <h3>Создать новую роль</h3>
+        <form method="post" th:action="@{/roles/create}" th:object="${newRole}">
+            <div class="form-group">
+                <label for="name">Название роли:</label>
+                <input type="text" id="name" th:field="*{name}" required class="form-control" 
+                       placeholder="Например: ROLE_MANAGER">
+            </div>
+            <div class="form-group">
+                <label for="description">Описание:</label>
+                <input type="text" id="description" th:field="*{description}" required class="form-control" 
+                       placeholder="Например: Manager role">
+            </div>
+            <button type="submit" class="btn btn-primary">Создать роль</button>
+        </form>
+    </div>
+
+    <!-- Roles List -->
+    <h3>Существующие роли</h3>
+    <div class="datagrid">
+        <table>
+            <thead>
+            <tr>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>По умолчанию</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="role : ${roles}">
+                <td th:text="${role.name}">ROLE_USER</td>
+                <td th:text="${role.description}">User role</td>
+                <td th:text="${role.defaultRole} ? 'Да' : 'Нет'">Нет</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

@@ -25,6 +25,13 @@
                     </roles>
                 </Menu>
                 <Menu>
+                    <title>Roles</title>
+                    <url>/roles</url>
+                    <roles>
+                        <roles>ADMIN</roles>
+                    </roles>
+                </Menu>
+                <Menu>
                     <title>Assignees</title>
                     <url>/users</url>
                     <roles>
