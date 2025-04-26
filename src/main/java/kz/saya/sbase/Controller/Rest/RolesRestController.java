@@ -41,11 +41,8 @@ public class RolesRestController {
         }
 
         List<Roles> roles = rolesService.getAllRoles();
-        List<RolePOJO> rolePOJOs = roles.stream()
-                .map(role -> new RolePOJO(role.getName(), role.getDescription(), role.isDefaultRole()))
-                .collect(Collectors.toList());
 
-        return ResponseEntity.ok(new RolesResponse("Roles retrieved successfully", rolePOJOs));
+        return ResponseEntity.ok(new RolesResponse("Roles retrieved successfully", roles));
     }
 
     @PostMapping("/create")
@@ -136,9 +133,9 @@ public class RolesRestController {
     @Setter
     public static class RolesResponse {
         private String message;
-        private List<RolePOJO> roles;
+        private List<Roles> roles;
 
-        public RolesResponse(String message, List<RolePOJO> roles) {
+        public RolesResponse(String message, List<Roles> roles) {
             this.message = message;
             this.roles = roles;
         }
