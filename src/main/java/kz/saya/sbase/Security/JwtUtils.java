@@ -2,6 +2,9 @@ package kz.saya.sbase.Security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import kz.saya.sbase.Entity.User;
+import kz.saya.sbase.Service.UserDetailsImpl;
+import kz.saya.sbase.Service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,10 +18,12 @@ import java.util.*;
 public class JwtUtils {
     private final SecretKey secretKey;
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
+    private final UserService userService;
 
-    public JwtUtils(@Value("${jwt.secret}") String secret) {
+    public JwtUtils(@Value("${jwt.secret}") String secret, UserService userService) {
         byte[] keyBytes = Base64.getDecoder().decode(secret);
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+        this.userService = userService;
     }
 
     public String generateToken(String login) {
@@ -75,7 +80,12 @@ public class JwtUtils {
     }
 
     public Authentication getAuthentication(String username, String token) {
-        return new UsernamePasswordAuthenticationToken(username, token, Collections.emptyList());
+        User user = userService.getUserByLogin(username);
+        if (user == null) {
+            return null;
+        }
+        UserDetailsImpl userDetails = new UserDetailsImpl(user);
+        return new UsernamePasswordAuthenticationToken(username, token, userDetails.getAuthorities());
     }
 
     private boolean isTokenExpired(String token) {
@@ -90,7 +100,7 @@ public class JwtUtils {
                 .getBody();
     }
 
-    public LocalDateTime getExpirationDate(String token){
+    public LocalDateTime getExpirationDate(String token) {
         return extractClaims(token).getExpiration().toInstant().atZone(TimeZone.getDefault().toZoneId()).toLocalDateTime();
     }
 }
