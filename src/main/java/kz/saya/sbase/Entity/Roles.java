@@ -15,8 +15,8 @@ public class Roles extends MappedSuperClass{
     private String description;
     private boolean defaultRole = false;
 
-    @ManyToMany(mappedBy = "roles")
     @JsonIgnore
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
 
     public Roles(String name, String description) {
