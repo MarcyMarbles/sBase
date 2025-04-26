@@ -14,6 +14,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,7 +44,7 @@ public class RolesRestController {
         List<RolePOJO> rolePOJOs = roles.stream()
                 .map(role -> new RolePOJO(role.getName(), role.getDescription(), role.isDefaultRole()))
                 .collect(Collectors.toList());
-        
+
         return ResponseEntity.ok(new RolesResponse("Roles retrieved successfully", rolePOJOs));
     }
 
@@ -70,25 +72,50 @@ public class RolesRestController {
         }
     }
 
+    @PostMapping("/set-default/{roleId}")
+    public ResponseEntity<RoleResponse> setRoleAsDefault(
+            HttpServletRequest request,
+            @PathVariable String roleId
+    ) {
+        // Check if user has ADMIN role
+        if (!hasAdminRole(request)) {
+            return ResponseEntity.status(403).body(new RoleResponse("Access denied. Admin role required.", null));
+        }
+
+        try {
+            UUID uuid = UUID.fromString(roleId);
+            Roles role = rolesService.setRoleAsDefault(uuid);
+            if (role == null) {
+                return ResponseEntity.status(404).body(new RoleResponse("Role not found", null));
+            }
+            RolePOJO updatedRolePOJO = new RolePOJO(role.getName(), role.getDescription(), role.isDefaultRole());
+            return ResponseEntity.ok(new RoleResponse("Role set as default successfully", updatedRolePOJO));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(400).body(new RoleResponse("Invalid role ID format", null));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(new RoleResponse("Error setting role as default: " + e.getMessage(), null));
+        }
+    }
+
     private boolean hasAdminRole(HttpServletRequest request) {
         // Extract token from Authorization header
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return false;
         }
-        
+
         String token = authHeader.substring(7);
         String login = jwtUtils.extractLogin(token);
         if (login == null) {
             return false;
         }
-        
+
         // Get authentication from security context
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return false;
         }
-        
+
         // Check if user has ADMIN role
         return authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
     }

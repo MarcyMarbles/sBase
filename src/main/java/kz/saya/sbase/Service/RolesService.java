@@ -11,6 +11,7 @@ import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class RolesService {
@@ -76,6 +77,24 @@ public class RolesService {
 
     public Roles getDefaultRole() {
         return roleRepository.findByDefaultRole((true)).orElse(null);
+    }
+
+    public Roles setRoleAsDefault(UUID roleId) {
+        // Find the role by ID
+        Roles role = roleRepository.findById(roleId).orElse(null);
+        if (role == null) {
+            return null; // Role not found
+        }
+
+        Roles currentDefaultRole = getDefaultRole();
+
+        if (currentDefaultRole != null && !currentDefaultRole.getId().equals(roleId)) {
+            currentDefaultRole.setDefaultRole(false);
+            roleRepository.save(currentDefaultRole);
+        }
+
+        role.setDefaultRole(true);
+        return roleRepository.save(role);
     }
 
 
