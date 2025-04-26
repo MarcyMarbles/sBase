@@ -17,9 +17,11 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
+    private final JwtAuthenticationService jwtAuthenticationService;
 
-    public JwtAuthenticationFilter(JwtUtils jwtUtils) {
+    public JwtAuthenticationFilter(JwtUtils jwtUtils, JwtAuthenticationService jwtAuthenticationService) {
         this.jwtUtils = jwtUtils;
+        this.jwtAuthenticationService = jwtAuthenticationService;
     }
 
     private boolean isProtectedPath(String path) {
@@ -59,9 +61,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         try {
             if (token != null) {
-                String username = jwtUtils.extractLogin(token);
-                if (jwtUtils.validateToken(token, username)) {
-                    Authentication authentication = jwtUtils.getAuthentication(username, token);
+                if (jwtAuthenticationService.validateToken(token)) {
+                    Authentication authentication = jwtAuthenticationService.getAuthentication(token);
                     SecurityContext context = SecurityContextHolder.createEmptyContext();
                     context.setAuthentication(authentication);
                     SecurityContextHolder.setContext(context);
@@ -80,10 +81,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.error("Token validation failed: {}", ex.getMessage());
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("Token validation failed");
-        } finally {
-            // !!! Удаляем этот вызов, иначе ты обнуляешь контекст после успешной авторизации
-            // SecurityContextHolder.clearContext();
         }
     }
 }
-

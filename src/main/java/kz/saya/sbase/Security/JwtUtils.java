@@ -2,12 +2,7 @@ package kz.saya.sbase.Security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import kz.saya.sbase.Entity.User;
-import kz.saya.sbase.Service.UserDetailsImpl;
-import kz.saya.sbase.Service.UserService;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -18,12 +13,10 @@ import java.util.*;
 public class JwtUtils {
     private final SecretKey secretKey;
     private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
-    private final UserService userService;
 
-    public JwtUtils(@Value("${jwt.secret}") String secret, UserService userService) {
+    public JwtUtils(@Value("${jwt.secret}") String secret) {
         byte[] keyBytes = Base64.getDecoder().decode(secret);
         this.secretKey = Keys.hmacShaKeyFor(keyBytes);
-        this.userService = userService;
     }
 
     public String generateToken(String login) {
@@ -79,16 +72,8 @@ public class JwtUtils {
         return extractClaims(token).get("id", String.class);
     }
 
-    public Authentication getAuthentication(String username, String token) {
-        User user = userService.getUserByLogin(username);
-        if (user == null) {
-            return null;
-        }
-        UserDetailsImpl userDetails = new UserDetailsImpl(user);
-        return new UsernamePasswordAuthenticationToken(username, token, userDetails.getAuthorities());
-    }
 
-    private boolean isTokenExpired(String token) {
+    public boolean isTokenExpired(String token) {
         return extractClaims(token).getExpiration().before(new Date());
     }
 
