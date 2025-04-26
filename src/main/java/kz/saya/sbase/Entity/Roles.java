@@ -1,5 +1,6 @@
 package kz.saya.sbase.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import lombok.Data;
@@ -15,6 +16,7 @@ public class Roles extends MappedSuperClass{
     private boolean defaultRole = false;
 
     @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
     private Set<User> users = new HashSet<>();
 
     public Roles(String name, String description) {
