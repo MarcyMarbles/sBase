@@ -72,7 +72,7 @@ public class RolesRestController {
     @PostMapping("/set-default/{roleId}")
     public ResponseEntity<RoleResponse> setRoleAsDefault(
             HttpServletRequest request,
-            @PathVariable String roleId
+            @PathVariable(name = "roleId") String roleId
     ) {
         // Check if user has ADMIN role
         if (!hasAdminRole(request)) {
