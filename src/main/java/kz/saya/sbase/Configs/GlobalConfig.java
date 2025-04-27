@@ -7,10 +7,4 @@ import org.springframework.graphql.execution.RuntimeWiringConfigurer;
 
 @Configuration
 public class GlobalConfig {
-    @Bean
-    public RuntimeWiringConfigurer runtimeWiringConfigurer() {
-        return wiringBuilder -> wiringBuilder
-                .scalar(ExtendedScalars.DateTime);
-    }
-
 }
