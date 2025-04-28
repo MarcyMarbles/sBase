@@ -1,8 +1,13 @@
 @echo off
-set "OUTPUT=project-structure.txt"
+setlocal
 
-if exist %OUTPUT% del %OUTPUT%
+REM Получаем имя текущей папки
+for %%I in ("%cd%") do set "FOLDER_NAME=%%~nxI"
 
-tree /F /A > %OUTPUT%
+set "OUTPUT=%FOLDER_NAME%.txt"
 
-start notepad %OUTPUT%
+if exist "%OUTPUT%" del "%OUTPUT%"
+
+tree /F /A > "%OUTPUT%"
+
+start notepad "%OUTPUT%"
