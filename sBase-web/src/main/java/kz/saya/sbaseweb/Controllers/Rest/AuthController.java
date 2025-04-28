@@ -57,13 +57,20 @@ public class AuthController {
         if (userAuthPOJO.login() == null || userAuthPOJO.password() == null) {
             return ResponseEntity.status(400).body(new TokenResponse("Invalid login.html or password", null));
         }
-        if(userService.isUserAlreadyCreated(userAuthPOJO.login())) {
+        if (userService.isUserAlreadyCreated(userAuthPOJO.login())) {
             return ResponseEntity.status(400).body(new TokenResponse("User already created", null));
         }
         User user = new User();
         user.setPassword(userAuthPOJO.password());
         user.setLogin(userAuthPOJO.login());
         user = userService.createUser(user);
+        if (user == null) {
+            return ResponseEntity.status(400).body(new TokenResponse("User already created", null));
+        }
+        user = userSecurityService.updatePassword(user, userAuthPOJO.password());
+        if (user == null) {
+            return ResponseEntity.status(400).body(new TokenResponse("User already created", null));
+        }
         String token = jwtUtils.generateToken(
                 user.getLogin(),
                 String.valueOf(user.getId()),
