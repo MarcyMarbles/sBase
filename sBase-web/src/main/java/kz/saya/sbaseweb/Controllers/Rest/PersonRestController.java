@@ -51,7 +51,7 @@ public class PersonRestController {
             return ResponseEntity.status(400).body(new PersonResponse("Person with this email already exists", null));
         }
         String token = httpServletRequest.getHeader("Authorization").substring(7);
-        String login = jwtUtils.extractLogin(token);
+        String login = jwtUtils.getUsernameFromToken(token);
         if (login == null) {
             return ResponseEntity.status(401).body(new PersonResponse("Unauthorized", null));
         }

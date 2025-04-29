@@ -3,82 +3,118 @@ package kz.saya.sbasesecurity.Security;
 import kz.saya.sbasecore.Repositories.UserRepository;
 import kz.saya.sbasesecurity.Service.JwtAuthenticationSuccessHandler;
 import kz.saya.sbasesecurity.Service.UserDetailsServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
-@EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtAuthenticationService authService;
     private final JwtUtils jwtUtils;
 
+    @Bean
+    public JwtTokenFilter jwtTokenFilter() {
+        return new JwtTokenFilter(authService);
+    }
 
-    public SecurityConfig(JwtUtils jwtUtils) {
-        this.jwtUtils = jwtUtils;
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry
+                        .addMapping("/api/**")
+                        .allowedOrigins("https://your-frontend.com")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true)
+                        .maxAge(3600);
+            }
+        };
     }
 
     @Bean
     @Order(1)
-    public SecurityFilterChain apiSecurity(HttpSecurity http, JwtAuthenticationService jwtAuthenticationService) throws Exception {
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(jwtUtils, jwtAuthenticationService);
-        return http
+    public org.springframework.security.web.SecurityFilterChain apiSecurity(HttpSecurity http) throws Exception {
+        http
                 .securityMatcher("/api/**")
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(withDefaults())                                // <- теперь корректно
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .exceptionHandling(ex -> {
+                    ex.authenticationEntryPoint((req, res, ex2) -> res.sendError(401));
+                    ex.accessDeniedHandler(new AccessDeniedHandlerImpl());
+                })
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/public/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .build();
+                .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self';"))
+                );
+
+        return http.build();
     }
 
     @Bean
     @Order(2)
-    public SecurityFilterChain mvcSecurity(HttpSecurity http) throws Exception {
-        return http
+    public org.springframework.security.web.SecurityFilterChain mvcSecurity(HttpSecurity http) throws Exception {
+        http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(withDefaults())                                // <- и здесь
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/public/**").permitAll()
-                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers(
+                                "/login", "/register", "/public/**",
+                                "/css/**", "/js/**", "/images/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .successHandler(authenticationSuccessHandler())
+                        .successHandler(new JwtAuthenticationSuccessHandler(jwtUtils))
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout")
-                        .deleteCookies("JWT_TOKEN")
+                        .logoutUrl("/logout")
+                        .deleteCookies("JWT_TOKEN", "JSESSIONID")
                         .permitAll()
                 )
-                .build();
+                .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
     }
 
     @Bean
-    public PasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(12);
     }
 
     @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return new UserDetailsServiceImpl(userRepository);
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
+        return cfg.getAuthenticationManager();
     }
 
     @Bean
-    public AuthenticationSuccessHandler authenticationSuccessHandler() {
-        return new JwtAuthenticationSuccessHandler(jwtUtils);
+    public UserDetailsServiceImpl userDetailsService(UserRepository repo) {
+        return new UserDetailsServiceImpl(repo);
     }
 }

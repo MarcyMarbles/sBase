@@ -100,7 +100,7 @@ public class RolesRestController {
         }
 
         String token = authHeader.substring(7);
-        String login = jwtUtils.extractLogin(token);
+        String login = jwtUtils.getUsernameFromToken(token);
         if (login == null) {
             return false;
         }

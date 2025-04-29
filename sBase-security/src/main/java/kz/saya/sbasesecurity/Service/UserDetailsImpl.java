@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.OffsetDateTime;
 import java.util.Collection;
+import java.util.UUID;
 
 public class UserDetailsImpl implements UserDetails {
 
@@ -27,6 +28,10 @@ public class UserDetailsImpl implements UserDetails {
                     return new SimpleGrantedAuthority(roleName);
                 })
                 .toList();
+    }
+
+    public UUID getId() {
+        return user.getId();
     }
 
     @Override

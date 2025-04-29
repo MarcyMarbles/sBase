@@ -33,7 +33,7 @@ public class UserSecurityService {
 
     public User extractUserFromToken(String token) {
         token = token.substring(7);
-        String login = jwtUtils.extractLogin(token);
+        String login = jwtUtils.getUsernameFromToken(token);
         if (login == null) {
             return null;
         }

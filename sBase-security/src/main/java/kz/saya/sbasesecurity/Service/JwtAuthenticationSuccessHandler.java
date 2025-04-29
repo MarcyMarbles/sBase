@@ -10,8 +10,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import java.io.IOException;
+import java.time.Duration;
 
 public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
     private final JwtUtils jwtUtils;
 
     public JwtAuthenticationSuccessHandler(JwtUtils jwtUtils) {
@@ -19,14 +21,29 @@ public class JwtAuthenticationSuccessHandler implements AuthenticationSuccessHan
     }
 
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String token = jwtUtils.generateToken(userDetails.getUsername());
-        Cookie cookie = new Cookie("JWT", token);
+    public void onAuthenticationSuccess(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        Authentication authentication)
+            throws IOException, ServletException {
+
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        String token = jwtUtils.generateToken(userDetails);
+
+        long maxAge = Duration.ofMillis(jwtUtils.getExpirationMs()).getSeconds();
+
+        Cookie cookie = new Cookie("JWT_TOKEN", token);
         cookie.setHttpOnly(true);
+        cookie.setSecure(true);               // только по HTTPS
         cookie.setPath("/");
-        cookie.setMaxAge(60 * 60);
-        response.addCookie(cookie);
+        cookie.setMaxAge((int) maxAge);
+        String sb = "JWT_TOKEN=" + token +
+                "; Max-Age=" + maxAge +
+                "; Path=/" +
+                "; HttpOnly" +
+                "; Secure" +
+                "; SameSite=Lax";
+        response.setHeader("Set-Cookie", sb);
+
         response.sendRedirect("/home");
     }
 }
