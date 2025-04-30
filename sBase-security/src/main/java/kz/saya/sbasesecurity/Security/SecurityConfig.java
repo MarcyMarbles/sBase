@@ -26,11 +26,10 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtAuthenticationService authService;
     private final JwtUtils jwtUtils;
 
     @Bean
-    public JwtTokenFilter jwtTokenFilter() {
+    public JwtTokenFilter jwtTokenFilter(JwtAuthenticationService authService) {
         return new JwtTokenFilter(authService);
     }
 
@@ -52,7 +51,7 @@ public class SecurityConfig {
 
     @Bean
     @Order(1)
-    public org.springframework.security.web.SecurityFilterChain apiSecurity(HttpSecurity http) throws Exception {
+    public org.springframework.security.web.SecurityFilterChain apiSecurity(HttpSecurity http, JwtTokenFilter jwtTokenFilter) throws Exception {
         http
                 .securityMatcher("/api/**")
                 .csrf(AbstractHttpConfigurer::disable)
@@ -66,7 +65,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/public/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                         .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self';"))
@@ -77,7 +76,7 @@ public class SecurityConfig {
 
     @Bean
     @Order(2)
-    public org.springframework.security.web.SecurityFilterChain mvcSecurity(HttpSecurity http) throws Exception {
+    public org.springframework.security.web.SecurityFilterChain mvcSecurity(HttpSecurity http, JwtTokenFilter jwtTokenFilter) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(withDefaults())                                // <- и здесь
@@ -98,7 +97,7 @@ public class SecurityConfig {
                         .deleteCookies("JWT_TOKEN", "JSESSIONID")
                         .permitAll()
                 )
-                .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
