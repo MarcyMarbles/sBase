@@ -32,7 +32,7 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        if (user.getLogin() == null || user.getPassword() == null) {
+        if (user.getLogin() == null) { // Больше не чекаем пароль на null
             return null;
         }
         Roles defaultRole = rolesService.getDefaultRole();

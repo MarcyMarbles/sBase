@@ -18,8 +18,8 @@ import java.util.Set;
 public class User extends MappedSuperClass {
     @Column(unique = true, nullable = false)
     private String login;
-    @Column(nullable = false)
-    private String password;
+    @Column(nullable = true)
+    private String password; // Так как временно будет null, и через UserSecurityService будет уже хешироваться
     @Column(nullable = false)
     private String username;
 
