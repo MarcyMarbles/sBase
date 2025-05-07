@@ -66,11 +66,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContext context = SecurityContextHolder.createEmptyContext();
                     context.setAuthentication(authentication);
                     SecurityContextHolder.setContext(context);
-                }else{
+                } else {
                     String path = request.getRequestURI();
-                    if(isProtectedPath(path)){
-                        response.sendRedirect("/login");
-                        return;
+                    if (isProtectedPath(path)) {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.getWriter().write("Unauthorized");
                     }
                 }
             }

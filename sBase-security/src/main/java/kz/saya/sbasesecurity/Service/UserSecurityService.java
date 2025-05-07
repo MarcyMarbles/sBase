@@ -16,7 +16,9 @@ public class UserSecurityService {
     private final JwtUtils jwtUtils;
     private final UserRepository userRepository;
 
-    public UserSecurityService(PasswordEncoder passwordEncoder, JwtUtils jwtUtils, UserRepository userRepository) {
+    public UserSecurityService(PasswordEncoder passwordEncoder,
+                               JwtUtils jwtUtils,
+                               UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
         this.userRepository = userRepository;
