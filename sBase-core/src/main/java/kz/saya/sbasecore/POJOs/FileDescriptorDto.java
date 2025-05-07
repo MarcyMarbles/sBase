@@ -23,6 +23,6 @@ public class FileDescriptorDto implements Serializable {
     private String mimeType;
     private String extension;
     private String path;
-    private String owner;
+    private UUID owner;
     private String description;
 }

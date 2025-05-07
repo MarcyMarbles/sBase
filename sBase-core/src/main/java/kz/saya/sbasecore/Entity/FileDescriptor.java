@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @Setter
@@ -19,6 +21,6 @@ public class FileDescriptor extends MappedSuperClass {
     private String mimeType;
     private String extension;
     private String path;
-    private String owner;
+    private UUID owner;
     private String description;
 }
