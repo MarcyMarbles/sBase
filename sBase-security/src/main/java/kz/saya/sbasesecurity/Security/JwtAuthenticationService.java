@@ -6,9 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class JwtAuthenticationService {
@@ -45,12 +48,17 @@ public class JwtAuthenticationService {
 
     public Authentication getAuthentication(String token) {
         if (!validateToken(token)) {
-            log.debug("Invalid or expired JWT token");
             return null;
         }
 
         String username = jwtUtils.getUsernameFromToken(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        List<String> roles = jwtUtils.getRolesFromToken(token);
+
+        UserDetails userDetails = new org.springframework.security.core.userdetails.User(
+                username,
+                "", // пароль нам не нужен
+                roles.stream().map(SimpleGrantedAuthority::new).toList()
+        );
 
         return new UsernamePasswordAuthenticationToken(
                 userDetails,
@@ -58,4 +66,5 @@ public class JwtAuthenticationService {
                 userDetails.getAuthorities()
         );
     }
+
 }

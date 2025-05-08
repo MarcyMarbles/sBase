@@ -24,63 +24,50 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtAuthenticationService = jwtAuthenticationService;
     }
 
-    private boolean isProtectedPath(String path) {
-        return path.startsWith("/api/") || path.startsWith("/home");
-    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        String token = null;
-
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("JWT_TOKEN".equals(cookie.getName())) {
-                    token = cookie.getValue();
-                }
-            }
-        }
-
-        if (token == null) {
-            String authHeader = request.getHeader("Authorization");
-
-            if (authHeader == null && request.getQueryString() != null) {
-                String query = request.getQueryString();
-                if (query.startsWith("token=")) {
-                    authHeader = "Bearer " + query.substring(6);
-                }
-            }
-
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                token = authHeader.substring(7);
-            }
-        }
-
         try {
-            if (token != null) {
-                if (jwtAuthenticationService.validateToken(token)) {
-                    Authentication authentication = jwtAuthenticationService.getAuthentication(token);
+            String token = resolveToken(request);
+
+            if (token != null && jwtAuthenticationService.validateToken(token)) {
+                Authentication authentication = jwtAuthenticationService.getAuthentication(token);
+                if (authentication != null) {
                     SecurityContext context = SecurityContextHolder.createEmptyContext();
                     context.setAuthentication(authentication);
                     SecurityContextHolder.setContext(context);
-                } else {
-                    String path = request.getRequestURI();
-                    if (isProtectedPath(path)) {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        response.getWriter().write("Unauthorized");
-                    }
                 }
             }
 
-            filterChain.doFilter(request, response);
-
         } catch (Exception ex) {
-            log.error("Token validation failed: {}", ex.getMessage());
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Token validation failed");
+            log.warn("Optional JWT processing failed: {}", ex.getMessage());
         }
+
+        filterChain.doFilter(request, response);
+    }
+
+    private String resolveToken(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("JWT_TOKEN".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+
+        String authHeader = request.getHeader("Authorization");
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            return authHeader.substring(7);
+        }
+
+        String query = request.getQueryString();
+        if (query != null && query.startsWith("token=")) {
+            return query.substring(6);
+        }
+
+        return null;
     }
 }

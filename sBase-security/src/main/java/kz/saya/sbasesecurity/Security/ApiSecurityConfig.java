@@ -26,10 +26,17 @@ public class ApiSecurityConfig {
                 .cors(Customizer.withDefaults())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/**/public/**").permitAll()
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/api/user/public/**",
+                                "/api/main/public/**",
+                                "/api/scrims/public/**",
+                                "/api/teams/public/**",
+                                "/api/gamer-profiles/public/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtils, jwtAuthenticationService),
                         UsernamePasswordAuthenticationFilter.class);
 
