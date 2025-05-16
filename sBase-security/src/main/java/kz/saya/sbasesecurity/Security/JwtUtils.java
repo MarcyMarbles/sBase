@@ -46,6 +46,8 @@ public class JwtUtils {
         if (userDetails instanceof UserDetailsImpl) {
             claims.put("id", ((UserDetailsImpl) userDetails).getId());
         }
+        log.info("Generating JWT for user: {}", userDetails.getUsername());
+        log.info("Roles : {}", userDetails.getAuthorities());
         claims.put("roles", userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
